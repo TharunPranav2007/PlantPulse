@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technician Directory | PlantPulse Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="brand-logo">
+                <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+                <div class="brand-text">PLANT<span>PULSE</span></div>
+            </div>
+            <button class="sidebar-toggle-btn"><i class="fas fa-chevron-left"></i></button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section-title">Core Operations</div>
+            <a href="../index.html" class="nav-item"><i class="fas fa-chart-line"></i><span class="nav-text">Dashboard</span></a>
+            <a href="assets.html" class="nav-item"><i class="fas fa-cubes"></i><span class="nav-text">Assets Management</span></a>
+            <a href="maintenance.html" class="nav-item"><i class="fas fa-screwdriver-wrench"></i><span class="nav-text">Maintenance</span></a>
+            <a href="workorders.html" class="nav-item"><i class="fas fa-clipboard-check"></i><span class="nav-text">Work Orders</span></a>
+
+            <div class="nav-section-title">Resources & Inventory</div>
+            <a href="technicians.html" class="nav-item active"><i class="fas fa-user-gear"></i><span class="nav-text">Technicians</span></a>
+            <a href="spareparts.html" class="nav-item"><i class="fas fa-boxes-packing"></i><span class="nav-text">Spare Parts</span></a>
+
+            <div class="nav-section-title">Intelligence</div>
+            <a href="analytics.html" class="nav-item"><i class="fas fa-chart-pie"></i><span class="nav-text">Analytics</span></a>
+            <a href="predictive.html" class="nav-item"><i class="fas fa-brain"></i><span class="nav-text">Predictive Health</span></a>
+            <a href="alerts.html" class="nav-item"><i class="fas fa-bell"></i><span class="nav-text">Alert Center</span><span class="badge-count alert-badge-count">0</span></a>
+
+            <div class="nav-section-title">System</div>
+            <a href="settings.html" class="nav-item"><i class="fas fa-gear"></i><span class="nav-text">Settings</span></a>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+                <div class="breadcrumbs">
+                    <a href="../index.html">Operations</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="current">Technician Directory</span>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <button class="global-search-btn global-search-trigger"><i class="fas fa-search"></i><span>Search technician...</span><span class="search-shortcut">Ctrl+K</span></button>
+                <button class="icon-btn" id="themeToggleBtn"><i class="fas fa-sun"></i></button>
+                <a href="alerts.html" class="icon-btn"><i class="fas fa-bell"></i><span class="dot-indicator"></span></a>
+                <div class="user-profile">
+                    <div class="avatar">AD</div>
+                    <div class="user-info"><span class="user-name">Admin Lead</span><span class="user-role">Plant Manager</span></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="content-body">
+            <div class="page-header">
+                <div class="page-title-group">
+                    <h1>Technician Directory & Workload</h1>
+                    <p class="page-subtitle">Monitor skilled engineering personnel, active work order allocations, and availability.</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-primary" id="addTechBtn"><i class="fas fa-user-plus"></i> Add Technician</button>
+                </div>
+            </div>
+
+            <div class="toolbar-bar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="techSearchInput" class="search-input" placeholder="Search technician name or specialization...">
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:1.25rem;" id="techGridContainer">
+                <!-- Rendered by js/technicians.js -->
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="../js/mock-data.js"></script>
+<script src="../js/store.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/technicians.js"></script>
+</body>
+</html>

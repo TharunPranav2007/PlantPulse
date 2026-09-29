@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industrial Analytics | PlantPulse Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="brand-logo">
+                <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+                <div class="brand-text">PLANT<span>PULSE</span></div>
+            </div>
+            <button class="sidebar-toggle-btn"><i class="fas fa-chevron-left"></i></button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section-title">Core Operations</div>
+            <a href="../index.html" class="nav-item"><i class="fas fa-chart-line"></i><span class="nav-text">Dashboard</span></a>
+            <a href="assets.html" class="nav-item"><i class="fas fa-cubes"></i><span class="nav-text">Assets Management</span></a>
+            <a href="maintenance.html" class="nav-item"><i class="fas fa-screwdriver-wrench"></i><span class="nav-text">Maintenance</span></a>
+            <a href="workorders.html" class="nav-item"><i class="fas fa-clipboard-check"></i><span class="nav-text">Work Orders</span></a>
+
+            <div class="nav-section-title">Resources & Inventory</div>
+            <a href="technicians.html" class="nav-item"><i class="fas fa-user-gear"></i><span class="nav-text">Technicians</span></a>
+            <a href="spareparts.html" class="nav-item"><i class="fas fa-boxes-packing"></i><span class="nav-text">Spare Parts</span></a>
+
+            <div class="nav-section-title">Intelligence</div>
+            <a href="analytics.html" class="nav-item active"><i class="fas fa-chart-pie"></i><span class="nav-text">Analytics</span></a>
+            <a href="predictive.html" class="nav-item"><i class="fas fa-brain"></i><span class="nav-text">Predictive Health</span></a>
+            <a href="alerts.html" class="nav-item"><i class="fas fa-bell"></i><span class="nav-text">Alert Center</span><span class="badge-count alert-badge-count">0</span></a>
+
+            <div class="nav-section-title">System</div>
+            <a href="settings.html" class="nav-item"><i class="fas fa-gear"></i><span class="nav-text">Settings</span></a>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+                <div class="breadcrumbs">
+                    <a href="../index.html">Operations</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="current">Industrial Analytics</span>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <button class="global-search-btn global-search-trigger"><i class="fas fa-search"></i><span>Search analytics...</span><span class="search-shortcut">Ctrl+K</span></button>
+                <button class="icon-btn" id="themeToggleBtn"><i class="fas fa-sun"></i></button>
+                <a href="alerts.html" class="icon-btn"><i class="fas fa-bell"></i><span class="dot-indicator"></span></a>
+                <div class="user-profile">
+                    <div class="avatar">AD</div>
+                    <div class="user-info"><span class="user-name">Admin Lead</span><span class="user-role">Plant Manager</span></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="content-body">
+            <div class="page-header">
+                <div class="page-title-group">
+                    <h1>Operational Analytics & Insights</h1>
+                    <p class="page-subtitle">Interactive visualization of plant downtime, cost distribution, failure frequency, and asset utilization.</p>
+                </div>
+            </div>
+
+            <div class="toolbar-bar">
+                <div class="filter-group" style="width:100%; justify-content:flex-start;">
+                    <span style="font-weight:600; font-size:0.85rem; color:var(--text-secondary);"><i class="fas fa-filter"></i> Analytics Filters:</span>
+                    <select id="analyticsPeriodFilter" class="select-control">
+                        <option value="30d">Last 30 Days</option>
+                        <option value="90d">Last 90 Days</option>
+                        <option value="1y">This Year</option>
+                    </select>
+
+                    <select id="analyticsUnitFilter" class="select-control">
+                        <option value="ALL">All Production Units</option>
+                        <option value="Machining Bay A">Machining Bay A</option>
+                        <option value="Assembly Line 2">Assembly Line 2</option>
+                        <option value="Heavy Press Shop">Heavy Press Shop</option>
+                    </select>
+
+                    <select id="analyticsTypeFilter" class="select-control">
+                        <option value="ALL">All Equipment Categories</option>
+                        <option value="Milling">Milling</option>
+                        <option value="Robotics">Robotics</option>
+                        <option value="Stamping">Stamping</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap:1.5rem;">
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fas fa-clock"></i> Machine Downtime Breakdown (Hours)</div>
+                    </div>
+                    <div class="card-body" style="height:280px; position:relative;">
+                        <canvas id="downtimeChartCanvas"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fas fa-indian-rupee-sign"></i> Maintenance Expenditure Distribution</div>
+                    </div>
+                    <div class="card-body" style="height:280px; position:relative;">
+                        <canvas id="costChartCanvas"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fas fa-chart-pie"></i> Equipment Category Health Distribution</div>
+                    </div>
+                    <div class="card-body" style="height:280px; position:relative;">
+                        <canvas id="typeDistChartCanvas"></canvas>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="../js/mock-data.js"></script>
+<script src="../js/store.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/analytics.js"></script>
+</body>
+</html>

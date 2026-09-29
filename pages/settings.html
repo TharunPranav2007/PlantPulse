@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | PlantPulse Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="brand-logo">
+                <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+                <div class="brand-text">PLANT<span>PULSE</span></div>
+            </div>
+            <button class="sidebar-toggle-btn"><i class="fas fa-chevron-left"></i></button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section-title">Core Operations</div>
+            <a href="../index.html" class="nav-item"><i class="fas fa-chart-line"></i><span class="nav-text">Dashboard</span></a>
+            <a href="assets.html" class="nav-item"><i class="fas fa-cubes"></i><span class="nav-text">Assets Management</span></a>
+            <a href="maintenance.html" class="nav-item"><i class="fas fa-screwdriver-wrench"></i><span class="nav-text">Maintenance</span></a>
+            <a href="workorders.html" class="nav-item"><i class="fas fa-clipboard-check"></i><span class="nav-text">Work Orders</span></a>
+
+            <div class="nav-section-title">Resources & Inventory</div>
+            <a href="technicians.html" class="nav-item"><i class="fas fa-user-gear"></i><span class="nav-text">Technicians</span></a>
+            <a href="spareparts.html" class="nav-item"><i class="fas fa-boxes-packing"></i><span class="nav-text">Spare Parts</span></a>
+
+            <div class="nav-section-title">Intelligence</div>
+            <a href="analytics.html" class="nav-item"><i class="fas fa-chart-pie"></i><span class="nav-text">Analytics</span></a>
+            <a href="predictive.html" class="nav-item"><i class="fas fa-brain"></i><span class="nav-text">Predictive Health</span></a>
+            <a href="alerts.html" class="nav-item"><i class="fas fa-bell"></i><span class="nav-text">Alert Center</span><span class="badge-count alert-badge-count">0</span></a>
+
+            <div class="nav-section-title">System</div>
+            <a href="settings.html" class="nav-item active"><i class="fas fa-gear"></i><span class="nav-text">Settings</span></a>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+                <div class="breadcrumbs">
+                    <a href="../index.html">System</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span class="current">Application Preferences</span>
+                </div>
+            </div>
+
+            <div class="topbar-right">
+                <button class="global-search-btn global-search-trigger"><i class="fas fa-search"></i><span>Search settings...</span><span class="search-shortcut">Ctrl+K</span></button>
+                <button class="icon-btn" id="themeToggleBtn"><i class="fas fa-sun"></i></button>
+                <a href="alerts.html" class="icon-btn"><i class="fas fa-bell"></i><span class="dot-indicator"></span></a>
+                <div class="user-profile">
+                    <div class="avatar">AD</div>
+                    <div class="user-info"><span class="user-name">Admin Lead</span><span class="user-role">Plant Manager</span></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="content-body">
+            <div class="page-header">
+                <div class="page-title-group">
+                    <h1>System Settings & Preferences</h1>
+                    <p class="page-subtitle">Configure theme appearance, notification thresholds, and client data state persistence.</p>
+                </div>
+            </div>
+
+            <div style="max-width:800px; display:flex; flex-direction:column; gap:1.5rem;">
+                
+                <!-- Appearance Settings Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fas fa-palette"></i> Visual Theme & Layout</div>
+                    </div>
+                    <div class="card-body" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-weight:600;">Dark / Light Command Interface</div>
+                            <div style="font-size:0.8rem; color:var(--text-secondary);">Toggle between high-contrast dark industrial theme and clean light theme.</div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="document.getElementById('themeToggleBtn').click()">Toggle Interface Theme</button>
+                    </div>
+                </div>
+
+                <!-- Stage 1 State Persistence Reset Card -->
+                <div class="card" style="border:1px solid rgba(239,68,68,0.3);">
+                    <div class="card-header" style="background:var(--status-danger-bg);">
+                        <div class="card-title" style="color:var(--status-danger);"><i class="fas fa-database"></i> Stage 1 Data Reset</div>
+                    </div>
+                    <div class="card-body" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-weight:600;">Restore Factory Mock Dataset</div>
+                            <div style="font-size:0.8rem; color:var(--text-secondary);">Resets localStorage state back to default 35+ assets, maintenance schedules, work orders, and parts.</div>
+                        </div>
+                        <button class="btn btn-danger" id="resetDataBtn"><i class="fas fa-rotate-left"></i> Reset All Data</button>
+                    </div>
+                </div>
+
+                <!-- Academic Information -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fas fa-graduation-cap"></i> Academic Project Evaluation Metadata</div>
+                    </div>
+                    <div class="card-body" style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6;">
+                        <p><strong>Project Name:</strong> PlantPulse</p>
+                        <p><strong>Project Title:</strong> Smart Industrial Asset & Predictive Maintenance Platform</p>
+                        <p><strong>Current Stage:</strong> Stage 1 - Static Website with Client-Side Scripting (LWP Review 01)</p>
+                        <p><strong>Tech Stack:</strong> HTML5, CSS3 (Vanilla CSS), JavaScript ES6+ (DOM, LocalStorage, Chart.js)</p>
+                        <p><strong>Target Migration Architecture (Stage 2):</strong> PHP 8.x + MySQL Database Engine</p>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="../js/mock-data.js"></script>
+<script src="../js/store.js"></script>
+<script src="../js/app.js"></script>
+<script src="../js/settings.js"></script>
+</body>
+</html>
