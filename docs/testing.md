@@ -39,3 +39,40 @@
 ### Test Case SYNC-04: Inventory Stock Adjustment & Auto-Alert Trigger
 - **Action:** Log in as `inventory`. Decrement `Synthetic Way Lube ISO VG 220` quantity below minimum required (to 4 units).
 - **Expected Outcome:** Stock status automatically updates to `LOW STOCK`. Low stock notification and alert generated automatically. Stock movement log records `OUT` transaction by `Vikram Singh`.
+
+---
+
+## 3. Theme System & Cross-Page Navigation Test Cases
+
+### Test Case THEME-01: Select Light Mode Persistence
+- **Action:** Click Theme Toggle button in Top Bar or Login Screen to select **Light Mode**.
+- **Expected Outcome:** Application shifts immediately to Light Mode. `plantpulse_theme` key in `localStorage` stores `"light"`.
+
+### Test Case THEME-02: Navigation Without Dark Flash (Light Mode Active)
+- **Action:** With Light Mode active, navigate sequentially from Dashboard → Assets → Maintenance → Work Orders → Technicians → Spare Parts → Analytics → Predictive Maintenance → Alert Center → Settings → Profile.
+- **Expected Outcome:** Every page loads instantly in Light Mode with ZERO dark-mode flash, flicker, or unstyled state.
+
+### Test Case THEME-03: Page Hard Refresh (Light Mode Active)
+- **Action:** While on `pages/assets.html` in Light Mode, perform a browser hard refresh (`Ctrl + Shift + R` / `F5`).
+- **Expected Outcome:** Page renders immediately in Light Mode on the first frame via synchronous early head script execution.
+
+### Test Case THEME-04: Select Dark Mode Persistence
+- **Action:** Click Theme Toggle button to select **Dark Mode**.
+- **Expected Outcome:** Application shifts to Dark Mode. `plantpulse_theme` key in `localStorage` stores `"dark"`.
+
+### Test Case THEME-05: Navigation Without Light Flash (Dark Mode Active)
+- **Action:** Navigate between all platform pages while Dark Mode is active.
+- **Expected Outcome:** Every page remains consistently Dark throughout with ZERO light-mode flash or flicker.
+
+### Test Case THEME-06: Login Page in Light Mode
+- **Action:** Set theme to Light Mode and log out or navigate to `login.html`.
+- **Expected Outcome:** Login page renders cleanly in Light Mode with high-contrast background, clear hero image visibility, dark wordmark, and crisp form inputs.
+
+### Test Case THEME-07: Login Page in Dark Mode
+- **Action:** Set theme to Dark Mode and log out or navigate to `login.html`.
+- **Expected Outcome:** Login page renders in Dark Mode with dark slate background, visible industrial hero image overlay, white wordmark, and readable form inputs.
+
+### Test Case THEME-08: Live Theme Switching on Login Screen
+- **Action:** Toggle theme button directly on `login.html`.
+- **Expected Outcome:** Background, login card, inputs, wordmark, and hero image treatment update immediately without reloading the page.
+

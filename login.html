@@ -1,15 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | PlantPulse Industrial Platform</title>
     <meta name="description" content="PlantPulse Smart Industrial Asset & Predictive Maintenance Platform Login.">
     
+    <!-- EARLY THEME INITIALIZATION SCRIPT (CRITICAL: PREVENTS THEME FLASHING) -->
+    <script>
+        (function() {
+            var savedTheme = localStorage.getItem("plantpulse_theme") || "dark";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+        })();
+    </script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body style="background-color:var(--bg-dark);">
+<body>
 
 <div class="login-container">
     
@@ -31,7 +39,13 @@
     </div>
 
     <!-- Right Login Card Section -->
-    <div class="login-card-wrapper">
+    <div class="login-card-wrapper" style="position:relative;">
+        
+        <!-- Theme Toggle on Login Screen -->
+        <button class="icon-btn theme-toggle-trigger" id="themeToggleBtn" style="position:absolute; top:1.5rem; right:1.5rem;" title="Switch Theme">
+            <i class="fas fa-sun"></i>
+        </button>
+
         <div class="login-card">
             
             <div style="margin-bottom:1.75rem;">
@@ -59,8 +73,11 @@
                 <div class="form-group" style="margin-bottom:1.25rem;">
                     <label class="form-label">Password <span class="required">*</span></label>
                     <div style="position:relative;">
-                        <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required style="padding-left:2.4rem;">
+                        <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required style="padding-left:2.4rem; padding-right:2.4rem;">
                         <i class="fas fa-lock" style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
+                        <button type="button" id="togglePassBtn" style="position:absolute; right:0.85rem; top:50%; transform:translateY(-50%); color:var(--text-muted);" title="Toggle Password Visibility">
+                            <i class="fas fa-eye" id="passEyeIcon"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -71,8 +88,8 @@
                     <a href="javascript:void(0)" onclick="alert('Stage 1 Demo: Please use one of the pre-configured demo credentials below.')" style="font-size:0.8rem;">Forgot Password?</a>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width:100%; padding:0.75rem; font-size:0.95rem; margin-bottom:1.5rem;">
-                    <i class="fas fa-right-to-bracket"></i> Sign In to PlantPulse
+                <button type="submit" id="submitLoginBtn" class="btn btn-primary" style="width:100%; padding:0.75rem; font-size:0.95rem; margin-bottom:1.5rem;">
+                    <i class="fas fa-right-to-bracket" id="loginBtnIcon"></i> <span id="loginBtnText">Sign In to PlantPulse</span>
                 </button>
             </form>
 
@@ -125,11 +142,15 @@
 
 <script src="js/mock-data.js"></script>
 <script src="js/store.js"></script>
+<script src="js/theme.js"></script>
 <script src="js/auth.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // If already logged in, redirect to dashboard
+        // Initialize Theme System
+        PlantPulseTheme.init();
+
+        // Redirect if already logged in
         if (PlantPulseAuth.getCurrentUser()) {
             window.location.href = "index.html";
         }
@@ -137,20 +158,47 @@
         const form = document.getElementById("loginForm");
         const alertBox = document.getElementById("loginAlert");
         const alertMsg = document.getElementById("loginAlertMsg");
+        const passInput = document.getElementById("loginPassword");
+        const togglePassBtn = document.getElementById("togglePassBtn");
+        const passEyeIcon = document.getElementById("passEyeIcon");
+        const submitBtn = document.getElementById("submitLoginBtn");
+        const btnIcon = document.getElementById("loginBtnIcon");
+        const btnText = document.getElementById("loginBtnText");
+
+        // Toggle Password Visibility
+        togglePassBtn.addEventListener("click", () => {
+            const isPass = passInput.type === "password";
+            passInput.type = isPass ? "text" : "password";
+            passEyeIcon.className = isPass ? "fas fa-eye-slash" : "fas fa-eye";
+        });
 
         form.addEventListener("submit", (e) => {
             e.preventDefault();
             const username = document.getElementById("loginUsername").value.trim();
-            const password = document.getElementById("loginPassword").value.trim();
+            const password = passInput.value.trim();
             const rememberMe = document.getElementById("rememberMe").checked;
 
-            const res = PlantPulseAuth.login(username, password, rememberMe);
-            if (res.success) {
-                window.location.href = "index.html";
-            } else {
-                alertMsg.textContent = res.message;
-                alertBox.style.display = "flex";
-            }
+            // Visual Login Button Spinner Transition
+            submitBtn.disabled = true;
+            btnIcon.className = "fas fa-spinner fa-spin";
+            btnText.textContent = "Signing In...";
+
+            setTimeout(() => {
+                const res = PlantPulseAuth.login(username, password, rememberMe);
+                if (res.success) {
+                    btnIcon.className = "fas fa-circle-check";
+                    btnText.textContent = "Authenticated!";
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 300);
+                } else {
+                    submitBtn.disabled = false;
+                    btnIcon.className = "fas fa-right-to-bracket";
+                    btnText.textContent = "Sign In to PlantPulse";
+                    alertMsg.textContent = res.message;
+                    alertBox.style.display = "flex";
+                }
+            }, 350);
         });
     });
 

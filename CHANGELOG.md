@@ -1,5 +1,18 @@
 # PlantPulse - Changelog & Release History
 
+## [1.2.0] - 2026-09-29
+### Added & Fixed
+- **Centralized Theme System (`js/theme.js`):** Unified `PlantPulseTheme` module establishing single source of truth for Light and Dark modes.
+- **Zero-Flicker Early Theme Initialization:** Added synchronous early head script across all HTML files eliminating dark-mode flash during navigation and hard refreshes in Light Mode.
+- **Theme Persistence:** Theme preference automatically stored and synchronized in `localStorage` under `plantpulse_theme`.
+- **Sidebar Accessibility & Contrast Fix:** Refactored sidebar section labels (`CORE OPERATIONS`, `RESOURCES & INVENTORY`, `INTELLIGENCE`, `SYSTEM`) to high-contrast WCAG 2.1 AAA compliant design system tokens.
+- **Dual-Theme Login Page (`login.html`):** Restructured login interface to respect selected theme, added live theme toggle, password eye visibility toggle, and loading state spinner.
+- **Enhanced Industrial Hero Image:** Improved contrast overlays on login hero image to maintain high visibility in both Light and Dark modes.
+- **PlantPulse Brand Identity:** Refined logo and wordmark visibility across all components and themes.
+- **Typography & CSS Variables Audit:** Unified design system tokens (`--bg-primary`, `--text-section-heading`, etc.) eliminating hardcoded colors.
+- **Smooth Page & Theme Transitions:** Added non-blocking CSS transitions for theme switching and subtle page enter animations.
+- **Documentation & Test Suite:** Added comprehensive architecture docs and test cases `THEME-01` to `THEME-08` covering cross-page theme stability.
+
 ## [1.1.0] - 2026-09-29
 ### Added
 - **Multi-Role Authentication Gateway (`login.html`):** Split-screen desktop layout with industrial backdrop and demo accounts quick-fill buttons.

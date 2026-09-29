@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asset Management | PlantPulse Industrial Platform</title>
     
+    <!-- EARLY THEME INITIALIZATION SCRIPT (PREVENTS THEME FLASHING) -->
+    <script>
+        (function() {
+            var savedTheme = localStorage.getItem("plantpulse_theme") || "dark";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+        })();
+    </script>
+
     <!-- Google Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
@@ -47,7 +55,7 @@
                     <span>Search assets...</span>
                     <span class="search-shortcut">Ctrl+K</span>
                 </button>
-                <button class="icon-btn" id="themeToggleBtn"><i class="fas fa-sun"></i></button>
+                <button class="icon-btn theme-toggle-trigger" id="themeToggleBtn"><i class="fas fa-sun"></i></button>
                 <a href="alerts.html" class="icon-btn"><i class="fas fa-bell"></i><span class="dot-indicator"></span></a>
                 <div class="user-profile"></div>
             </div>
@@ -130,6 +138,7 @@
 
 <script src="../js/mock-data.js"></script>
 <script src="../js/store.js"></script>
+<script src="../js/theme.js"></script>
 <script src="../js/auth.js"></script>
 <script src="../js/app.js"></script>
 <script src="../js/assets.js"></script>

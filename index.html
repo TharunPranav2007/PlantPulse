@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PlantPulse | Smart Industrial Operations & Predictive Maintenance Platform</title>
     <meta name="description" content="Enterprise industrial asset monitoring, predictive maintenance analytics, and operational work order management platform.">
     
+    <!-- EARLY THEME INITIALIZATION SCRIPT (PREVENTS THEME FLASHING) -->
+    <script>
+        (function() {
+            var savedTheme = localStorage.getItem("plantpulse_theme") || "dark";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+        })();
+    </script>
+
     <!-- Google Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -64,7 +72,7 @@
                     <span class="search-shortcut">Ctrl+K</span>
                 </button>
 
-                <button class="icon-btn" id="themeToggleBtn" title="Toggle Theme">
+                <button class="icon-btn theme-toggle-trigger" id="themeToggleBtn" title="Toggle Theme">
                     <i class="fas fa-sun"></i>
                 </button>
 
@@ -89,6 +97,7 @@
 <!-- JavaScript Core Dependencies -->
 <script src="js/mock-data.js"></script>
 <script src="js/store.js"></script>
+<script src="js/theme.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/app.js"></script>
 <script src="js/dashboard.js"></script>

@@ -73,12 +73,24 @@ The platform enforces strict **Role-Based Access Control (RBAC)**, allowing diff
 |---|---|---|
 | **Structure** | HTML5 | Semantic structure, accessible forms, modal templates |
 | **Styling** | Vanilla CSS3 | CSS Variables, Flexbox, CSS Grid, Dark/Light themes |
-| **Scripting** | Vanilla JavaScript (ES6+) | Central state store, RBAC auth guard, DOM manipulation |
-| **Data Storage** | LocalStorage / SessionStorage | Client-side state persistence across reloads |
-| **Charts** | Chart.js (CDN) | Telemetry health trends, downtime, cost breakdowns |
+| **Scripting** | Vanilla JavaScript (ES6+) | Central state store, theme engine, RBAC auth guard, DOM manipulation |
+| **Theme Engine** | Centralized `js/theme.js` | Dual-mode (`dark`/`light`), zero-flicker early head script, persistent state |
+| **Data Storage** | LocalStorage / SessionStorage | Client-side state & theme persistence across reloads and navigation |
+| **Charts** | Chart.js (CDN) | Telemetry health trends, downtime, cost breakdowns in dark/light themes |
 | **Iconography**| FontAwesome 6 (CDN) | Industrial command center iconography |
 
 *Note: As required by academic constraints, React, Angular, Vue, Node.js, Express, MongoDB, Firebase, and PostgreSQL are NOT used in this implementation.*
+
+---
+
+## 5.1 Centralized Theme Engine & Accessibility Enhancements
+
+- ☀️ **Light Mode & 🌙 Dark Mode Support:** Full dual-theme system driven by CSS design variables in `css/style.css`.
+- ⚡ **Zero-Flicker Cross-Page Navigation:** Synchronous inline `<head>` initialization script reads stored theme from `localStorage` (`plantpulse_theme`) BEFORE CSS parsing and DOM rendering, preventing Flash of Unstyled Content (FOUC) or dark mode flash.
+- 👁️ **WCAG 2.1 AAA Sidebar Contrast:** Sidebar category headings (`CORE OPERATIONS`, `RESOURCES & INVENTORY`, `INTELLIGENCE`, `SYSTEM`) styled with high-contrast slate design tokens (`--text-section-heading`), semi-bold typography, and uppercase letter-spacing.
+- 🖼️ **Dual-Theme Login Hero Visuals:** Industrial hero graphic optimized with contrast overlays ensuring high visibility in both Light and Dark modes.
+- 🔒 **Interactive Login Experience:** Includes password visibility toggle, quick-fill demo account pills, and dynamic button loading states.
+
 
 ---
 
@@ -127,6 +139,7 @@ WT Lab Project/
 │
 ├── js/
 │   ├── mock-data.js            # Initial Dataset (35+ assets, logs, orders)
+│   ├── theme.js                # Centralized Theme System & Toggle Manager
 │   ├── store.js                # Central State Store, LocalStorage API, Predictive Engine
 │   ├── auth.js                 # Session Management, RBAC Matrix & Route Guards
 │   ├── app.js                  # Role-Aware Sidebar, Topbar Profile, Toasts, Modals

@@ -1,7 +1,7 @@
 /* ==========================================================================
    PLANTPULSE - Global Application UI Controller
    Handles Session enforcement, Role-Aware Sidebar Navigation, Topbar Profile,
-   Theme switching, Toast notifications, Modals, and Global Search.
+   Theme synchronization, Toast notifications, Modals, and Global Search.
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -14,9 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const PlantPulseApp = {
     init() {
+        this.initTheme();
         this.renderUserHeader();
         this.renderRoleSidebar();
-        this.initTheme();
         this.initSidebarToggle();
         this.initGlobalSearch();
         this.initAlertBadge();
@@ -27,6 +27,13 @@ const PlantPulseApp = {
             store.subscribe(() => {
                 this.initAlertBadge();
             });
+        }
+    },
+
+    /* --- Theme Initialization Delegate --- */
+    initTheme() {
+        if (typeof PlantPulseTheme !== "undefined") {
+            PlantPulseTheme.init();
         }
     },
 
@@ -152,35 +159,6 @@ const PlantPulseApp = {
         }
 
         navContainer.innerHTML = navHtml;
-    },
-
-    /* --- Theme Management --- */
-    initTheme() {
-        const savedTheme = localStorage.getItem("plantpulse_theme") || "dark";
-        document.documentElement.setAttribute("data-theme", savedTheme);
-        this.updateThemeToggleIcon(savedTheme);
-
-        const themeBtn = document.getElementById("themeToggleBtn");
-        if (themeBtn) {
-            themeBtn.onclick = () => {
-                const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
-                const newTheme = currentTheme === "dark" ? "light" : "dark";
-                document.documentElement.setAttribute("data-theme", newTheme);
-                localStorage.setItem("plantpulse_theme", newTheme);
-                this.updateThemeToggleIcon(newTheme);
-                this.showToast("Theme Updated", `Switched to ${newTheme.toUpperCase()} mode`, "info");
-            };
-        }
-    },
-
-    updateThemeToggleIcon(theme) {
-        const themeBtn = document.getElementById("themeToggleBtn");
-        if (themeBtn) {
-            const icon = themeBtn.querySelector("i");
-            if (icon) {
-                icon.className = theme === "dark" ? "fas fa-sun" : "fas fa-moon";
-            }
-        }
     },
 
     /* --- Sidebar Collapse & Mobile Navigation --- */
