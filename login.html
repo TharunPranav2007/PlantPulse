@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | PlantPulse Industrial Platform</title>
+    <meta name="description" content="PlantPulse Smart Industrial Asset & Predictive Maintenance Platform Login.">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="background-color:var(--bg-dark);">
+
+<div class="login-container">
+    
+    <!-- Left Hero Section (Desktop Split Screen) -->
+    <div class="login-hero">
+        <div class="brand-logo" style="font-size:1.5rem;">
+            <div class="brand-icon"><i class="fas fa-bolt"></i></div>
+            <div class="brand-text">PLANT<span>PULSE</span></div>
+        </div>
+
+        <div class="login-hero-content">
+            <h1 class="login-hero-title">Smart Industrial Operations</h1>
+            <p class="login-hero-sub">Monitor assets, streamline maintenance work orders, and predict telemetry failures with automated operational intelligence.</p>
+        </div>
+
+        <div style="font-size:0.8rem; color:var(--text-muted);">
+            &copy; 2026 PlantPulse Operations • Web Technologies Laboratory Project
+        </div>
+    </div>
+
+    <!-- Right Login Card Section -->
+    <div class="login-card-wrapper">
+        <div class="login-card">
+            
+            <div style="margin-bottom:1.75rem;">
+                <h2 style="font-size:1.4rem; margin-bottom:0.3rem;">Sign In to Platform</h2>
+                <p style="font-size:0.85rem; color:var(--text-secondary);">Select a demo role or enter your employee credentials.</p>
+            </div>
+
+            <div id="loginAlert" class="toast toast-danger" style="display:none; margin-bottom:1.25rem; width:100%;">
+                <i class="fas fa-circle-exclamation toast-icon"></i>
+                <div class="toast-content">
+                    <div class="toast-title">Authentication Failed</div>
+                    <div class="toast-message" id="loginAlertMsg">Invalid credentials.</div>
+                </div>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group" style="margin-bottom:1.25rem;">
+                    <label class="form-label">Username / Employee ID <span class="required">*</span></label>
+                    <div style="position:relative;">
+                        <input type="text" id="loginUsername" class="form-control" placeholder="e.g. admin" required autofocus style="padding-left:2.4rem;">
+                        <i class="fas fa-user" style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom:1.25rem;">
+                    <label class="form-label">Password <span class="required">*</span></label>
+                    <div style="position:relative;">
+                        <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required style="padding-left:2.4rem;">
+                        <i class="fas fa-lock" style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; font-size:0.85rem;">
+                    <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; color:var(--text-secondary);">
+                        <input type="checkbox" id="rememberMe"> Remember me
+                    </label>
+                    <a href="javascript:void(0)" onclick="alert('Stage 1 Demo: Please use one of the pre-configured demo credentials below.')" style="font-size:0.8rem;">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width:100%; padding:0.75rem; font-size:0.95rem; margin-bottom:1.5rem;">
+                    <i class="fas fa-right-to-bracket"></i> Sign In to PlantPulse
+                </button>
+            </form>
+
+            <!-- Pre-configured Demo Accounts Helper Section -->
+            <div style="border-top:1px solid var(--border-color); padding-top:1.25rem;">
+                <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.8px; margin-bottom:0.75rem;">
+                    <i class="fas fa-flask"></i> Select Demo Role Credentials:
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                    
+                    <div class="demo-account-chip" onclick="fillCredentials('admin', 'admin123')">
+                        <div>
+                            <div style="font-weight:600; color:var(--text-primary);">Rajesh Kumar <span class="badge badge-info" style="font-size:0.65rem; padding:1px 5px;">Plant Manager</span></div>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">admin / admin123</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:var(--accent-primary);"></i>
+                    </div>
+
+                    <div class="demo-account-chip" onclick="fillCredentials('technician', 'tech123')">
+                        <div>
+                            <div style="font-weight:600; color:var(--text-primary);">Arun Kumar <span class="badge badge-warning" style="font-size:0.65rem; padding:1px 5px;">Technician</span></div>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">technician / tech123</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:var(--accent-primary);"></i>
+                    </div>
+
+                    <div class="demo-account-chip" onclick="fillCredentials('supervisor', 'super123')">
+                        <div>
+                            <div style="font-weight:600; color:var(--text-primary);">Priya Sharma <span class="badge badge-purple" style="font-size:0.65rem; padding:1px 5px;">Supervisor</span></div>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">supervisor / super123</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:var(--accent-primary);"></i>
+                    </div>
+
+                    <div class="demo-account-chip" onclick="fillCredentials('inventory', 'inventory123')">
+                        <div>
+                            <div style="font-weight:600; color:var(--text-primary);">Vikram Singh <span class="badge badge-success" style="font-size:0.65rem; padding:1px 5px;">Inventory Mgr</span></div>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">inventory / inventory123</div>
+                        </div>
+                        <i class="fas fa-chevron-right" style="color:var(--accent-primary);"></i>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="js/mock-data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/auth.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // If already logged in, redirect to dashboard
+        if (PlantPulseAuth.getCurrentUser()) {
+            window.location.href = "index.html";
+        }
+
+        const form = document.getElementById("loginForm");
+        const alertBox = document.getElementById("loginAlert");
+        const alertMsg = document.getElementById("loginAlertMsg");
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const username = document.getElementById("loginUsername").value.trim();
+            const password = document.getElementById("loginPassword").value.trim();
+            const rememberMe = document.getElementById("rememberMe").checked;
+
+            const res = PlantPulseAuth.login(username, password, rememberMe);
+            if (res.success) {
+                window.location.href = "index.html";
+            } else {
+                alertMsg.textContent = res.message;
+                alertBox.style.display = "flex";
+            }
+        });
+    });
+
+    function fillCredentials(user, pass) {
+        document.getElementById("loginUsername").value = user;
+        document.getElementById("loginPassword").value = pass;
+        document.getElementById("loginAlert").style.display = "none";
+    }
+</script>
+
+</body>
+</html>

@@ -477,6 +477,8 @@ ul {
     gap: 0.75rem;
     padding-left: 0.5rem;
     border-left: 1px solid var(--border-color);
+    position: relative;
+    cursor: pointer;
 }
 
 .avatar {
@@ -506,6 +508,53 @@ ul {
 .user-role {
     font-size: 0.75rem;
     color: var(--text-muted);
+}
+
+/* User Dropdown Menu */
+.user-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    background-color: var(--bg-modal);
+    border: 1px solid var(--border-color-light);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    width: 220px;
+    display: none;
+    flex-direction: column;
+    z-index: 200;
+    overflow: hidden;
+}
+
+.user-dropdown-menu.show {
+    display: flex;
+    animation: toastIn 0.2s ease forwards;
+}
+
+.user-dropdown-header {
+    padding: 0.85rem 1rem;
+    background-color: var(--bg-card-header);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.user-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.7rem 1rem;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    transition: var(--transition-fast);
+}
+
+.user-dropdown-item:hover {
+    background-color: var(--bg-surface-hover);
+    color: var(--text-primary);
+}
+
+.user-dropdown-item.logout-item {
+    color: var(--status-danger);
+    border-top: 1px solid var(--border-color);
 }
 
 /* --- Main Content Container --- */
@@ -1226,6 +1275,154 @@ textarea.form-control {
     border-top: 1px solid var(--border-color);
 }
 
+/* --- Activity Feed Timeline Styling --- */
+.activity-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+    padding-left: 0.5rem;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    position: relative;
+}
+
+.activity-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    color: var(--accent-primary);
+    flex-shrink: 0;
+}
+
+.activity-content {
+    flex: 1;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.activity-user {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.activity-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* --- Login Page Split Screen Layout --- */
+.login-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: var(--bg-dark);
+}
+
+.login-hero {
+    flex: 1.2;
+    background: linear-gradient(135deg, rgba(10, 14, 23, 0.88) 0%, rgba(18, 24, 36, 0.94) 100%),
+                url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 3.5rem;
+    border-right: 1px solid var(--border-color);
+    position: relative;
+}
+
+.login-hero-content {
+    max-width: 520px;
+    margin-top: auto;
+    margin-bottom: 2rem;
+}
+
+.login-hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+.login-hero-sub {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.login-card-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+    background-color: var(--bg-surface);
+}
+
+.login-card {
+    width: 100%;
+    max-width: 440px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.demo-account-chip {
+    padding: 0.65rem 0.85rem;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+}
+
+.demo-account-chip:hover {
+    border-color: var(--accent-primary);
+    background: var(--bg-surface-hover);
+}
+
+/* --- 403 Access Restricted View --- */
+.access-denied-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 1.5rem;
+    min-height: 60vh;
+}
+
+.access-denied-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--status-danger-bg);
+    color: var(--status-danger);
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
 /* --- Skeletons Loading States --- */
 .skeleton {
     background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-surface-hover) 50%, var(--bg-card) 75%);
@@ -1263,6 +1460,9 @@ textarea.form-control {
     }
     .global-search-btn {
         min-width: 160px;
+    }
+    .login-hero {
+        display: none;
     }
 }
 

@@ -20,23 +20,7 @@
         </div>
 
         <nav class="sidebar-nav">
-            <div class="nav-section-title">Core Operations</div>
-            <a href="../index.html" class="nav-item"><i class="fas fa-chart-line"></i><span class="nav-text">Dashboard</span></a>
-            <a href="assets.html" class="nav-item"><i class="fas fa-cubes"></i><span class="nav-text">Assets Management</span></a>
-            <a href="maintenance.html" class="nav-item"><i class="fas fa-screwdriver-wrench"></i><span class="nav-text">Maintenance</span></a>
-            <a href="workorders.html" class="nav-item"><i class="fas fa-clipboard-check"></i><span class="nav-text">Work Orders</span></a>
-
-            <div class="nav-section-title">Resources & Inventory</div>
-            <a href="technicians.html" class="nav-item"><i class="fas fa-user-gear"></i><span class="nav-text">Technicians</span></a>
-            <a href="spareparts.html" class="nav-item"><i class="fas fa-boxes-packing"></i><span class="nav-text">Spare Parts</span></a>
-
-            <div class="nav-section-title">Intelligence</div>
-            <a href="analytics.html" class="nav-item"><i class="fas fa-chart-pie"></i><span class="nav-text">Analytics</span></a>
-            <a href="predictive.html" class="nav-item"><i class="fas fa-brain"></i><span class="nav-text">Predictive Health</span></a>
-            <a href="alerts.html" class="nav-item"><i class="fas fa-bell"></i><span class="nav-text">Alert Center</span><span class="badge-count alert-badge-count">0</span></a>
-
-            <div class="nav-section-title">System</div>
-            <a href="settings.html" class="nav-item active"><i class="fas fa-gear"></i><span class="nav-text">Settings</span></a>
+            <!-- Dynamically populated by js/app.js -->
         </nav>
     </aside>
 
@@ -55,10 +39,7 @@
                 <button class="global-search-btn global-search-trigger"><i class="fas fa-search"></i><span>Search settings...</span><span class="search-shortcut">Ctrl+K</span></button>
                 <button class="icon-btn" id="themeToggleBtn"><i class="fas fa-sun"></i></button>
                 <a href="alerts.html" class="icon-btn"><i class="fas fa-bell"></i><span class="dot-indicator"></span></a>
-                <div class="user-profile">
-                    <div class="avatar">AD</div>
-                    <div class="user-info"><span class="user-name">Admin Lead</span><span class="user-role">Plant Manager</span></div>
-                </div>
+                <div class="user-profile"></div>
             </div>
         </header>
 
@@ -121,6 +102,7 @@
 
 <script src="../js/mock-data.js"></script>
 <script src="../js/store.js"></script>
+<script src="../js/auth.js"></script>
 <script src="../js/app.js"></script>
 <script src="../js/settings.js"></script>
 </body>

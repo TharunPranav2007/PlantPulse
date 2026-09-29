@@ -1,25 +1,157 @@
 /* ==========================================================================
    PLANTPULSE - Global Application UI Controller
-   Handles Sidebar collapse, Mobile menu, Theme switching, Toasts, 
-   Modal dialogs, Global Search, and Active Page highlights.
+   Handles Session enforcement, Role-Aware Sidebar Navigation, Topbar Profile,
+   Theme switching, Toast notifications, Modals, and Global Search.
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Enforce Authentication Check
+    if (typeof PlantPulseAuth !== "undefined") {
+        if (!PlantPulseAuth.requireAuth()) return;
+    }
     PlantPulseApp.init();
 });
 
 const PlantPulseApp = {
     init() {
+        this.renderUserHeader();
+        this.renderRoleSidebar();
         this.initTheme();
-        this.initSidebar();
+        this.initSidebarToggle();
         this.initGlobalSearch();
         this.initAlertBadge();
         this.highlightActiveNav();
-        
-        // Listen to store updates to update alert counts dynamically
-        store.subscribe((event) => {
-            this.initAlertBadge();
-        });
+
+        // Subscribe to store updates to update alert counts dynamically
+        if (typeof store !== "undefined") {
+            store.subscribe(() => {
+                this.initAlertBadge();
+            });
+        }
+    },
+
+    /* --- Render Logged-in User Profile in Topbar --- */
+    renderUserHeader() {
+        const user = PlantPulseAuth.getCurrentUser();
+        if (!user) return;
+
+        const profileContainer = document.querySelector(".user-profile");
+        if (profileContainer) {
+            profileContainer.innerHTML = `
+                <div class="avatar">${user.avatar || 'AD'}</div>
+                <div class="user-info">
+                    <span class="user-name">${user.name}</span>
+                    <span class="user-role">${user.role}</span>
+                </div>
+                <i class="fas fa-chevron-down" style="font-size:0.75rem; color:var(--text-muted); margin-left:0.25rem;"></i>
+
+                <!-- Profile Dropdown Menu -->
+                <div class="user-dropdown-menu" id="userDropdownMenu">
+                    <div class="user-dropdown-header">
+                        <div style="font-weight:600; color:var(--text-primary);">${user.name}</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">${user.employeeId} • ${user.department}</div>
+                    </div>
+                    <a href="${window.location.pathname.includes('/pages/') ? 'profile.html' : 'pages/profile.html'}" class="user-dropdown-item">
+                        <i class="fas fa-id-card"></i> My Profile
+                    </a>
+                    <a href="${window.location.pathname.includes('/pages/') ? 'settings.html' : 'pages/settings.html'}" class="user-dropdown-item">
+                        <i class="fas fa-sliders"></i> Preferences
+                    </a>
+                    <button class="user-dropdown-item logout-item" onclick="PlantPulseAuth.logout()">
+                        <i class="fas fa-right-from-bracket"></i> Sign Out Session
+                    </button>
+                </div>
+            `;
+
+            profileContainer.onclick = (e) => {
+                e.stopPropagation();
+                const menu = document.getElementById("userDropdownMenu");
+                if (menu) menu.classList.toggle("show");
+            };
+
+            document.addEventListener("click", () => {
+                const menu = document.getElementById("userDropdownMenu");
+                if (menu) menu.classList.remove("show");
+            });
+        }
+    },
+
+    /* --- Dynamic Role-Aware Sidebar Builder --- */
+    renderRoleSidebar() {
+        const user = PlantPulseAuth.getCurrentUser();
+        if (!user) return;
+
+        const navContainer = document.querySelector(".sidebar-nav");
+        if (!navContainer) return;
+
+        const isPagesSubdir = window.location.pathname.includes("/pages/");
+        const rootPath = isPagesSubdir ? "../" : "";
+        const pagesPath = isPagesSubdir ? "" : "pages/";
+
+        let navHtml = "";
+
+        if (user.roleKey === "admin") {
+            navHtml = `
+                <div class="nav-section-title">Core Operations</div>
+                <a href="${rootPath}index.html" class="nav-item"><i class="fas fa-chart-line"></i><span class="nav-text">Dashboard</span></a>
+                <a href="${pagesPath}assets.html" class="nav-item"><i class="fas fa-cubes"></i><span class="nav-text">Assets Management</span></a>
+                <a href="${pagesPath}maintenance.html" class="nav-item"><i class="fas fa-screwdriver-wrench"></i><span class="nav-text">Maintenance</span></a>
+                <a href="${pagesPath}workorders.html" class="nav-item"><i class="fas fa-clipboard-check"></i><span class="nav-text">Work Orders</span></a>
+
+                <div class="nav-section-title">Resources & Inventory</div>
+                <a href="${pagesPath}technicians.html" class="nav-item"><i class="fas fa-user-gear"></i><span class="nav-text">Technicians</span></a>
+                <a href="${pagesPath}spareparts.html" class="nav-item"><i class="fas fa-boxes-packing"></i><span class="nav-text">Spare Parts</span></a>
+
+                <div class="nav-section-title">Intelligence</div>
+                <a href="${pagesPath}analytics.html" class="nav-item"><i class="fas fa-chart-pie"></i><span class="nav-text">Analytics</span></a>
+                <a href="${pagesPath}predictive.html" class="nav-item"><i class="fas fa-brain"></i><span class="nav-text">Predictive Health</span></a>
+                <a href="${pagesPath}alerts.html" class="nav-item"><i class="fas fa-bell"></i><span class="nav-text">Alert Center</span><span class="badge-count alert-badge-count">0</span></a>
+
+                <div class="nav-section-title">System</div>
+                <a href="${pagesPath}profile.html" class="nav-item"><i class="fas fa-id-card"></i><span class="nav-text">My Profile</span></a>
+                <a href="${pagesPath}settings.html" class="nav-item"><i class="fas fa-gear"></i><span class="nav-text">Settings</span></a>
+            `;
+        } else if (user.roleKey === "technician") {
+            navHtml = `
+                <div class="nav-section-title">Technician Workspace</div>
+                <a href="${rootPath}index.html" class="nav-item"><i class="fas fa-gauge-high"></i><span class="nav-text">My Workspace</span></a>
+                <a href="${pagesPath}workorders.html" class="nav-item"><i class="fas fa-clipboard-list"></i><span class="nav-text">My Work Orders</span></a>
+                <a href="${pagesPath}maintenance.html" class="nav-item"><i class="fas fa-screwdriver-wrench"></i><span class="nav-text">My Maintenance</span></a>
+                <a href="${pagesPath}assets.html" class="nav-item"><i class="fas fa-cubes"></i><span class="nav-text">Assigned Assets</span></a>
+
+                <div class="nav-section-title">System & Alerts</div>
+                <a href="${pagesPath}alerts.html" class="nav-item"><i class="fas fa-bell"></i><span class="nav-text">Alert Center</span><span class="badge-count alert-badge-count">0</span></a>
+                <a href="${pagesPath}profile.html" class="nav-item"><i class="fas fa-id-card"></i><span class="nav-text">My Profile</span></a>
+            `;
+        } else if (user.roleKey === "supervisor") {
+            navHtml = `
+                <div class="nav-section-title">Supervisor Management</div>
+                <a href="${rootPath}index.html" class="nav-item"><i class="fas fa-chart-line"></i><span class="nav-text">Operations Center</span></a>
+                <a href="${pagesPath}assets.html" class="nav-item"><i class="fas fa-cubes"></i><span class="nav-text">Plant Assets</span></a>
+                <a href="${pagesPath}maintenance.html" class="nav-item"><i class="fas fa-screwdriver-wrench"></i><span class="nav-text">Maintenance</span></a>
+                <a href="${pagesPath}workorders.html" class="nav-item"><i class="fas fa-clipboard-check"></i><span class="nav-text">Work Orders Queue</span></a>
+                <a href="${pagesPath}technicians.html" class="nav-item"><i class="fas fa-user-gear"></i><span class="nav-text">Technicians Roster</span></a>
+
+                <div class="nav-section-title">Intelligence</div>
+                <a href="${pagesPath}analytics.html" class="nav-item"><i class="fas fa-chart-pie"></i><span class="nav-text">Analytics</span></a>
+                <a href="${pagesPath}predictive.html" class="nav-item"><i class="fas fa-brain"></i><span class="nav-text">Predictive Diagnostics</span></a>
+                <a href="${pagesPath}alerts.html" class="nav-item"><i class="fas fa-bell"></i><span class="nav-text">Alert Center</span><span class="badge-count alert-badge-count">0</span></a>
+                <a href="${pagesPath}profile.html" class="nav-item"><i class="fas fa-id-card"></i><span class="nav-text">My Profile</span></a>
+            `;
+        } else if (user.roleKey === "inventory") {
+            navHtml = `
+                <div class="nav-section-title">Stores & Inventory</div>
+                <a href="${rootPath}index.html" class="nav-item"><i class="fas fa-boxes-stacked"></i><span class="nav-text">Stores Workspace</span></a>
+                <a href="${pagesPath}spareparts.html" class="nav-item"><i class="fas fa-boxes-packing"></i><span class="nav-text">Spare Parts Catalog</span></a>
+                <a href="${pagesPath}assets.html" class="nav-item"><i class="fas fa-cubes"></i><span class="nav-text">View Plant Assets</span></a>
+
+                <div class="nav-section-title">System & Alerts</div>
+                <a href="${pagesPath}alerts.html" class="nav-item"><i class="fas fa-bell"></i><span class="nav-text">Stock Alerts</span><span class="badge-count alert-badge-count">0</span></a>
+                <a href="${pagesPath}profile.html" class="nav-item"><i class="fas fa-id-card"></i><span class="nav-text">My Profile</span></a>
+            `;
+        }
+
+        navContainer.innerHTML = navHtml;
     },
 
     /* --- Theme Management --- */
@@ -30,14 +162,14 @@ const PlantPulseApp = {
 
         const themeBtn = document.getElementById("themeToggleBtn");
         if (themeBtn) {
-            themeBtn.addEventListener("click", () => {
+            themeBtn.onclick = () => {
                 const currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
                 const newTheme = currentTheme === "dark" ? "light" : "dark";
                 document.documentElement.setAttribute("data-theme", newTheme);
                 localStorage.setItem("plantpulse_theme", newTheme);
                 this.updateThemeToggleIcon(newTheme);
                 this.showToast("Theme Updated", `Switched to ${newTheme.toUpperCase()} mode`, "info");
-            });
+            };
         }
     },
 
@@ -51,29 +183,28 @@ const PlantPulseApp = {
         }
     },
 
-    /* --- Sidebar & Mobile Navigation --- */
-    initSidebar() {
+    /* --- Sidebar Collapse & Mobile Navigation --- */
+    initSidebarToggle() {
         const sidebar = document.querySelector(".sidebar");
         const toggleBtn = document.querySelector(".sidebar-toggle-btn");
         const mobileBtn = document.querySelector(".mobile-menu-btn");
 
         if (toggleBtn && sidebar) {
-            toggleBtn.addEventListener("click", () => {
+            toggleBtn.onclick = () => {
                 sidebar.classList.toggle("collapsed");
                 const isCollapsed = sidebar.classList.contains("collapsed");
                 localStorage.setItem("plantpulse_sidebar_collapsed", isCollapsed ? "true" : "false");
-            });
+            };
 
-            // Restore collapsed state
             if (localStorage.getItem("plantpulse_sidebar_collapsed") === "true") {
                 sidebar.classList.add("collapsed");
             }
         }
 
         if (mobileBtn && sidebar) {
-            mobileBtn.addEventListener("click", () => {
+            mobileBtn.onclick = () => {
                 sidebar.classList.toggle("mobile-open");
-            });
+            };
         }
     },
 
@@ -92,7 +223,7 @@ const PlantPulseApp = {
         });
     },
 
-    /* --- Dynamic Alert Badge in Sidebar & Topbar --- */
+    /* --- Alert Badge Count --- */
     initAlertBadge() {
         const alerts = store.getAlerts();
         const unreadCount = alerts.filter(a => !a.read).length;
@@ -103,7 +234,7 @@ const PlantPulseApp = {
         });
     },
 
-    /* --- Toast Notification Controller --- */
+    /* --- Toast Notification System --- */
     showToast(title, message, type = "success") {
         let container = document.querySelector(".toast-container");
         if (!container) {
@@ -143,15 +274,13 @@ const PlantPulseApp = {
         }, 4000);
     },
 
-    /* --- Global Search Modal System --- */
+    /* --- Global Search System (Ctrl + K) --- */
     initGlobalSearch() {
         const triggerBtns = document.querySelectorAll(".global-search-trigger");
-        
         triggerBtns.forEach(btn => {
-            btn.addEventListener("click", () => this.openSearchModal());
+            btn.onclick = () => this.openSearchModal();
         });
 
-        // Keyboard Shortcut Ctrl+K or Cmd+K
         document.addEventListener("keydown", (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === "k") {
                 e.preventDefault();
@@ -178,7 +307,7 @@ const PlantPulseApp = {
                             <input type="text" id="globalSearchInput" class="search-input" placeholder="Search assets, work orders, technicians, spare parts..." autofocus>
                         </div>
                         <div id="globalSearchResults" style="max-height:380px; overflow-y:auto; display:flex; flex-direction:column; gap:1rem;">
-                            <div style="text-align:center; color:var(--text-muted); padding:2rem;">Start typing to search across all operational modules...</div>
+                            <div style="text-align:center; color:var(--text-muted); padding:2rem;">Start typing to search across central operational store...</div>
                         </div>
                     </div>
                 </div>
@@ -206,7 +335,7 @@ const PlantPulseApp = {
 
         const q = query.trim().toLowerCase();
         if (!q) {
-            resultsContainer.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:2rem;">Start typing to search across all operational modules...</div>`;
+            resultsContainer.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:2rem;">Start typing to search across central operational store...</div>`;
             return;
         }
 
@@ -216,6 +345,8 @@ const PlantPulseApp = {
         const spareParts = store.getSpareParts().filter(p => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q));
 
         let html = "";
+        const isPagesSubdir = window.location.pathname.includes("/pages/");
+        const pagesPrefix = isPagesSubdir ? "" : "pages/";
 
         if (assets.length > 0) {
             html += `<div style="font-weight:700; font-size:0.75rem; text-transform:uppercase; color:var(--accent-primary); letter-spacing:1px; margin-bottom:0.5rem;">Assets (${assets.length})</div>`;
@@ -226,7 +357,7 @@ const PlantPulseApp = {
                             <div style="font-weight:600; color:var(--text-primary);"><span class="table-cell-code">${a.id}</span> - ${a.name}</div>
                             <div style="font-size:0.78rem; color:var(--text-muted);">${a.unit} • ${a.type}</div>
                         </div>
-                        <a href="pages/assets.html" class="btn btn-sm btn-secondary">View Asset</a>
+                        <a href="${pagesPrefix}assets.html" class="btn btn-sm btn-secondary">View Asset</a>
                     </div>
                 `;
             });
@@ -241,35 +372,20 @@ const PlantPulseApp = {
                             <div style="font-weight:600; color:var(--text-primary);"><span class="table-cell-code">${w.id}</span> - ${w.issue}</div>
                             <div style="font-size:0.78rem; color:var(--text-muted);">Assigned to: ${w.technician} • Status: ${w.status}</div>
                         </div>
-                        <a href="pages/workorders.html" class="btn btn-sm btn-secondary">View Work Order</a>
-                    </div>
-                `;
-            });
-        }
-
-        if (technicians.length > 0) {
-            html += `<div style="font-weight:700; font-size:0.75rem; text-transform:uppercase; color:var(--accent-primary); letter-spacing:1px; margin-top:1rem; margin-bottom:0.5rem;">Technicians (${technicians.length})</div>`;
-            technicians.forEach(t => {
-                html += `
-                    <div style="padding:0.75rem; background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-md); display:flex; justify-content:space-between; align-items:center;">
-                        <div>
-                            <div style="font-weight:600; color:var(--text-primary);">${t.name}</div>
-                            <div style="font-size:0.78rem; color:var(--text-muted);">${t.specialization} • ${t.availability}</div>
-                        </div>
-                        <a href="pages/technicians.html" class="btn btn-sm btn-secondary">View Profile</a>
+                        <a href="${pagesPrefix}workorders.html" class="btn btn-sm btn-secondary">View Work Order</a>
                     </div>
                 `;
             });
         }
 
         if (!html) {
-            html = `<div style="text-align:center; color:var(--text-muted); padding:2rem;">No matching industrial records found for "${query}".</div>`;
+            html = `<div style="text-align:center; color:var(--text-muted); padding:2rem;">No matching records found for "${query}".</div>`;
         }
 
         resultsContainer.innerHTML = html;
     },
 
-    /* --- Custom Modal Dialog Generator --- */
+    /* --- Custom Modal Dialog Helpers --- */
     openModal(title, contentHtml, footerButtonsHtml) {
         let modal = document.getElementById("ppGlobalModal");
         if (!modal) {
@@ -303,7 +419,6 @@ const PlantPulseApp = {
         if (modal) modal.classList.remove("active");
     },
 
-    /* --- Custom Confirmation Modal --- */
     confirmAction(title, message, confirmBtnText, onConfirm) {
         const content = `<p style="color:var(--text-secondary); line-height:1.6;">${message}</p>`;
         const buttons = `
