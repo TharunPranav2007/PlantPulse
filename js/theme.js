@@ -18,6 +18,25 @@ const PlantPulseTheme = {
         document.documentElement.setAttribute("data-theme", validTheme);
         localStorage.setItem(this.STORAGE_KEY, validTheme);
         this.updateUI(validTheme);
+
+        // Dispatch custom event for Chart.js dynamic theme adaptation
+        window.dispatchEvent(new CustomEvent("plantpulse_theme_change", { detail: { theme: validTheme } }));
+    },
+
+    // Chart.js Theme Adaptation Colors Helper
+    getChartColors() {
+        const isDark = this.getTheme() === "dark";
+        return {
+            isDark,
+            gridColor: isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(15, 23, 42, 0.08)",
+            textColor: isDark ? "#94a3b8" : "#475569",
+            headingColor: isDark ? "#f8fafc" : "#0f172a",
+            tooltipBg: isDark ? "#1c263b" : "#ffffff",
+            tooltipText: isDark ? "#ffffff" : "#0f172a",
+            tooltipBorder: isDark ? "#26334d" : "#cbd5e1",
+            accentPrimary: isDark ? "#00f2fe" : "#0284c7",
+            accentSecondary: isDark ? "#00b4db" : "#0369a1"
+        };
     },
 
     // Toggle between light and dark modes

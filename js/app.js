@@ -21,6 +21,7 @@ const PlantPulseApp = {
         this.initGlobalSearch();
         this.initAlertBadge();
         this.highlightActiveNav();
+        this.initActivityTimeTicker();
 
         // Subscribe to store updates to update alert counts dynamically
         if (typeof store !== "undefined") {
@@ -28,6 +29,18 @@ const PlantPulseApp = {
                 this.initAlertBadge();
             });
         }
+    },
+
+    initActivityTimeTicker() {
+        setInterval(() => {
+            if (typeof store === "undefined") return;
+            document.querySelectorAll(".activity-time[data-timestamp]").forEach(el => {
+                const ts = el.getAttribute("data-timestamp");
+                if (ts && !isNaN(Number(ts))) {
+                    el.textContent = store.getRelativeTime(ts);
+                }
+            });
+        }, 10000);
     },
 
     /* --- Theme Initialization Delegate --- */
@@ -100,61 +113,61 @@ const PlantPulseApp = {
         if (user.roleKey === "admin") {
             navHtml = `
                 <div class="nav-section-title">Core Operations</div>
-                <a href="${rootPath}index.html" class="nav-item"><i class="fas fa-chart-line"></i><span class="nav-text">Dashboard</span></a>
-                <a href="${pagesPath}assets.html" class="nav-item"><i class="fas fa-cubes"></i><span class="nav-text">Assets Management</span></a>
-                <a href="${pagesPath}maintenance.html" class="nav-item"><i class="fas fa-screwdriver-wrench"></i><span class="nav-text">Maintenance</span></a>
-                <a href="${pagesPath}workorders.html" class="nav-item"><i class="fas fa-clipboard-check"></i><span class="nav-text">Work Orders</span></a>
+                <a href="${rootPath}index.html" class="nav-item" data-tooltip="Dashboard"><i class="fas fa-chart-line"></i><span class="nav-text">Dashboard</span></a>
+                <a href="${pagesPath}assets.html" class="nav-item" data-tooltip="Assets Management"><i class="fas fa-cubes"></i><span class="nav-text">Assets Management</span></a>
+                <a href="${pagesPath}maintenance.html" class="nav-item" data-tooltip="Maintenance"><i class="fas fa-screwdriver-wrench"></i><span class="nav-text">Maintenance</span></a>
+                <a href="${pagesPath}workorders.html" class="nav-item" data-tooltip="Work Orders"><i class="fas fa-clipboard-check"></i><span class="nav-text">Work Orders</span></a>
 
                 <div class="nav-section-title">Resources & Inventory</div>
-                <a href="${pagesPath}technicians.html" class="nav-item"><i class="fas fa-user-gear"></i><span class="nav-text">Technicians</span></a>
-                <a href="${pagesPath}spareparts.html" class="nav-item"><i class="fas fa-boxes-packing"></i><span class="nav-text">Spare Parts</span></a>
+                <a href="${pagesPath}technicians.html" class="nav-item" data-tooltip="Technicians"><i class="fas fa-user-gear"></i><span class="nav-text">Technicians</span></a>
+                <a href="${pagesPath}spareparts.html" class="nav-item" data-tooltip="Spare Parts"><i class="fas fa-boxes-packing"></i><span class="nav-text">Spare Parts</span></a>
 
                 <div class="nav-section-title">Intelligence</div>
-                <a href="${pagesPath}analytics.html" class="nav-item"><i class="fas fa-chart-pie"></i><span class="nav-text">Analytics</span></a>
-                <a href="${pagesPath}predictive.html" class="nav-item"><i class="fas fa-brain"></i><span class="nav-text">Predictive Health</span></a>
-                <a href="${pagesPath}alerts.html" class="nav-item"><i class="fas fa-bell"></i><span class="nav-text">Alert Center</span><span class="badge-count alert-badge-count">0</span></a>
+                <a href="${pagesPath}analytics.html" class="nav-item" data-tooltip="Analytics"><i class="fas fa-chart-pie"></i><span class="nav-text">Analytics</span></a>
+                <a href="${pagesPath}predictive.html" class="nav-item" data-tooltip="Predictive Health"><i class="fas fa-brain"></i><span class="nav-text">Predictive Health</span></a>
+                <a href="${pagesPath}alerts.html" class="nav-item" data-tooltip="Alert Center"><i class="fas fa-bell"></i><span class="nav-text">Alert Center</span><span class="badge-count alert-badge-count">0</span></a>
 
                 <div class="nav-section-title">System</div>
-                <a href="${pagesPath}profile.html" class="nav-item"><i class="fas fa-id-card"></i><span class="nav-text">My Profile</span></a>
-                <a href="${pagesPath}settings.html" class="nav-item"><i class="fas fa-gear"></i><span class="nav-text">Settings</span></a>
+                <a href="${pagesPath}profile.html" class="nav-item" data-tooltip="My Profile"><i class="fas fa-id-card"></i><span class="nav-text">My Profile</span></a>
+                <a href="${pagesPath}settings.html" class="nav-item" data-tooltip="Settings"><i class="fas fa-gear"></i><span class="nav-text">Settings</span></a>
             `;
         } else if (user.roleKey === "technician") {
             navHtml = `
                 <div class="nav-section-title">Technician Workspace</div>
-                <a href="${rootPath}index.html" class="nav-item"><i class="fas fa-gauge-high"></i><span class="nav-text">My Workspace</span></a>
-                <a href="${pagesPath}workorders.html" class="nav-item"><i class="fas fa-clipboard-list"></i><span class="nav-text">My Work Orders</span></a>
-                <a href="${pagesPath}maintenance.html" class="nav-item"><i class="fas fa-screwdriver-wrench"></i><span class="nav-text">My Maintenance</span></a>
-                <a href="${pagesPath}assets.html" class="nav-item"><i class="fas fa-cubes"></i><span class="nav-text">Assigned Assets</span></a>
+                <a href="${rootPath}index.html" class="nav-item" data-tooltip="My Workspace"><i class="fas fa-gauge-high"></i><span class="nav-text">My Workspace</span></a>
+                <a href="${pagesPath}workorders.html" class="nav-item" data-tooltip="My Work Orders"><i class="fas fa-clipboard-list"></i><span class="nav-text">My Work Orders</span></a>
+                <a href="${pagesPath}maintenance.html" class="nav-item" data-tooltip="My Maintenance"><i class="fas fa-screwdriver-wrench"></i><span class="nav-text">My Maintenance</span></a>
+                <a href="${pagesPath}assets.html" class="nav-item" data-tooltip="Assigned Assets"><i class="fas fa-cubes"></i><span class="nav-text">Assigned Assets</span></a>
 
                 <div class="nav-section-title">System & Alerts</div>
-                <a href="${pagesPath}alerts.html" class="nav-item"><i class="fas fa-bell"></i><span class="nav-text">Alert Center</span><span class="badge-count alert-badge-count">0</span></a>
-                <a href="${pagesPath}profile.html" class="nav-item"><i class="fas fa-id-card"></i><span class="nav-text">My Profile</span></a>
+                <a href="${pagesPath}alerts.html" class="nav-item" data-tooltip="Alert Center"><i class="fas fa-bell"></i><span class="nav-text">Alert Center</span><span class="badge-count alert-badge-count">0</span></a>
+                <a href="${pagesPath}profile.html" class="nav-item" data-tooltip="My Profile"><i class="fas fa-id-card"></i><span class="nav-text">My Profile</span></a>
             `;
         } else if (user.roleKey === "supervisor") {
             navHtml = `
                 <div class="nav-section-title">Supervisor Management</div>
-                <a href="${rootPath}index.html" class="nav-item"><i class="fas fa-chart-line"></i><span class="nav-text">Operations Center</span></a>
-                <a href="${pagesPath}assets.html" class="nav-item"><i class="fas fa-cubes"></i><span class="nav-text">Plant Assets</span></a>
-                <a href="${pagesPath}maintenance.html" class="nav-item"><i class="fas fa-screwdriver-wrench"></i><span class="nav-text">Maintenance</span></a>
-                <a href="${pagesPath}workorders.html" class="nav-item"><i class="fas fa-clipboard-check"></i><span class="nav-text">Work Orders Queue</span></a>
-                <a href="${pagesPath}technicians.html" class="nav-item"><i class="fas fa-user-gear"></i><span class="nav-text">Technicians Roster</span></a>
+                <a href="${rootPath}index.html" class="nav-item" data-tooltip="Operations Center"><i class="fas fa-chart-line"></i><span class="nav-text">Operations Center</span></a>
+                <a href="${pagesPath}assets.html" class="nav-item" data-tooltip="Plant Assets"><i class="fas fa-cubes"></i><span class="nav-text">Plant Assets</span></a>
+                <a href="${pagesPath}maintenance.html" class="nav-item" data-tooltip="Maintenance"><i class="fas fa-screwdriver-wrench"></i><span class="nav-text">Maintenance</span></a>
+                <a href="${pagesPath}workorders.html" class="nav-item" data-tooltip="Work Orders Queue"><i class="fas fa-clipboard-check"></i><span class="nav-text">Work Orders Queue</span></a>
+                <a href="${pagesPath}technicians.html" class="nav-item" data-tooltip="Technicians Roster"><i class="fas fa-user-gear"></i><span class="nav-text">Technicians Roster</span></a>
 
                 <div class="nav-section-title">Intelligence</div>
-                <a href="${pagesPath}analytics.html" class="nav-item"><i class="fas fa-chart-pie"></i><span class="nav-text">Analytics</span></a>
-                <a href="${pagesPath}predictive.html" class="nav-item"><i class="fas fa-brain"></i><span class="nav-text">Predictive Diagnostics</span></a>
-                <a href="${pagesPath}alerts.html" class="nav-item"><i class="fas fa-bell"></i><span class="nav-text">Alert Center</span><span class="badge-count alert-badge-count">0</span></a>
-                <a href="${pagesPath}profile.html" class="nav-item"><i class="fas fa-id-card"></i><span class="nav-text">My Profile</span></a>
+                <a href="${pagesPath}analytics.html" class="nav-item" data-tooltip="Analytics"><i class="fas fa-chart-pie"></i><span class="nav-text">Analytics</span></a>
+                <a href="${pagesPath}predictive.html" class="nav-item" data-tooltip="Predictive Diagnostics"><i class="fas fa-brain"></i><span class="nav-text">Predictive Diagnostics</span></a>
+                <a href="${pagesPath}alerts.html" class="nav-item" data-tooltip="Alert Center"><i class="fas fa-bell"></i><span class="nav-text">Alert Center</span><span class="badge-count alert-badge-count">0</span></a>
+                <a href="${pagesPath}profile.html" class="nav-item" data-tooltip="My Profile"><i class="fas fa-id-card"></i><span class="nav-text">My Profile</span></a>
             `;
         } else if (user.roleKey === "inventory") {
             navHtml = `
                 <div class="nav-section-title">Stores & Inventory</div>
-                <a href="${rootPath}index.html" class="nav-item"><i class="fas fa-boxes-stacked"></i><span class="nav-text">Stores Workspace</span></a>
-                <a href="${pagesPath}spareparts.html" class="nav-item"><i class="fas fa-boxes-packing"></i><span class="nav-text">Spare Parts Catalog</span></a>
-                <a href="${pagesPath}assets.html" class="nav-item"><i class="fas fa-cubes"></i><span class="nav-text">View Plant Assets</span></a>
+                <a href="${rootPath}index.html" class="nav-item" data-tooltip="Stores Workspace"><i class="fas fa-boxes-stacked"></i><span class="nav-text">Stores Workspace</span></a>
+                <a href="${pagesPath}spareparts.html" class="nav-item" data-tooltip="Spare Parts Catalog"><i class="fas fa-boxes-packing"></i><span class="nav-text">Spare Parts Catalog</span></a>
+                <a href="${pagesPath}assets.html" class="nav-item" data-tooltip="View Plant Assets"><i class="fas fa-cubes"></i><span class="nav-text">View Plant Assets</span></a>
 
                 <div class="nav-section-title">System & Alerts</div>
-                <a href="${pagesPath}alerts.html" class="nav-item"><i class="fas fa-bell"></i><span class="nav-text">Stock Alerts</span><span class="badge-count alert-badge-count">0</span></a>
-                <a href="${pagesPath}profile.html" class="nav-item"><i class="fas fa-id-card"></i><span class="nav-text">My Profile</span></a>
+                <a href="${pagesPath}alerts.html" class="nav-item" data-tooltip="Stock Alerts"><i class="fas fa-bell"></i><span class="nav-text">Stock Alerts</span><span class="badge-count alert-badge-count">0</span></a>
+                <a href="${pagesPath}profile.html" class="nav-item" data-tooltip="My Profile"><i class="fas fa-id-card"></i><span class="nav-text">My Profile</span></a>
             `;
         }
 

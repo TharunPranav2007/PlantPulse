@@ -28,6 +28,12 @@ const AnalyticsController = {
         if (periodFilter) periodFilter.addEventListener("change", () => this.renderCharts());
         if (unitFilter) unitFilter.addEventListener("change", () => this.renderCharts());
         if (typeFilter) typeFilter.addEventListener("change", () => this.renderCharts());
+
+        window.addEventListener("plantpulse_theme_change", () => {
+            if (document.getElementById("downtimeChartCanvas")) {
+                this.renderCharts();
+            }
+        });
     },
 
     renderCharts() {
@@ -41,6 +47,8 @@ const AnalyticsController = {
         if (!canvas || typeof Chart === "undefined") return;
 
         if (this.downtimeChart) this.downtimeChart.destroy();
+
+        const c = typeof PlantPulseTheme !== "undefined" ? PlantPulseTheme.getChartColors() : { gridColor: "rgba(255,255,255,0.08)", textColor: "#94a3b8" };
 
         const ctx = canvas.getContext("2d");
         this.downtimeChart = new Chart(ctx, {
@@ -57,10 +65,19 @@ const AnalyticsController = {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: c.tooltipBg,
+                        titleColor: c.headingColor,
+                        bodyColor: c.tooltipText,
+                        borderColor: c.tooltipBorder,
+                        borderWidth: 1
+                    }
+                },
                 scales: {
-                    y: { grid: { color: "rgba(255, 255, 255, 0.05)" }, ticks: { color: "#94a3b8" } },
-                    x: { grid: { display: false }, ticks: { color: "#94a3b8" } }
+                    y: { grid: { color: c.gridColor }, ticks: { color: c.textColor } },
+                    x: { grid: { display: false }, ticks: { color: c.textColor } }
                 }
             }
         });
@@ -72,6 +89,8 @@ const AnalyticsController = {
 
         if (this.costChart) this.costChart.destroy();
 
+        const c = typeof PlantPulseTheme !== "undefined" ? PlantPulseTheme.getChartColors() : { headingColor: "#f8fafc", cardBg: "#161e2e" };
+
         const ctx = canvas.getContext("2d");
         this.costChart = new Chart(ctx, {
             type: "doughnut",
@@ -79,9 +98,9 @@ const AnalyticsController = {
                 labels: ["Emergency Repairs", "Preventive PM", "Predictive Parts", "Corrective Overhaul"],
                 datasets: [{
                     data: [48000, 32000, 22000, 18500],
-                    backgroundColor: ["#ef4444", "#10b981", "#00f2fe", "#f59e0b"],
+                    backgroundColor: ["#ef4444", "#10b981", c.accentPrimary || "#00f2fe", "#f59e0b"],
                     borderWidth: 2,
-                    borderColor: "#161e2e"
+                    borderColor: c.cardBg || "#161e2e"
                 }]
             },
             options: {
@@ -90,7 +109,14 @@ const AnalyticsController = {
                 plugins: {
                     legend: {
                         position: "right",
-                        labels: { color: "#f1f5f9", font: { family: "Inter", size: 12 } }
+                        labels: { color: c.headingColor, font: { family: "Inter", size: 12 } }
+                    },
+                    tooltip: {
+                        backgroundColor: c.tooltipBg,
+                        titleColor: c.headingColor,
+                        bodyColor: c.tooltipText,
+                        borderColor: c.tooltipBorder,
+                        borderWidth: 1
                     }
                 }
             }
@@ -103,20 +129,22 @@ const AnalyticsController = {
 
         if (this.typeDistributionChart) this.typeDistributionChart.destroy();
 
+        const c = typeof PlantPulseTheme !== "undefined" ? PlantPulseTheme.getChartColors() : { headingColor: "#f8fafc" };
+
         const ctx = canvas.getContext("2d");
         this.typeDistributionChart = new Chart(ctx, {
             type: "polarArea",
             data: {
                 labels: ["Milling", "Turning", "Robotics", "Stamping", "Compressors", "Thermodynamics"],
                 datasets: [{
-                    data: [1, 1, 1, 1, 1, 1],
+                    data: [4, 3, 2, 2, 2, 1],
                     backgroundColor: [
-                        "rgba(0, 242, 254, 0.6)",
-                        "rgba(59, 130, 246, 0.6)",
-                        "rgba(139, 92, 246, 0.6)",
-                        "rgba(239, 68, 68, 0.6)",
-                        "rgba(16, 185, 129, 0.6)",
-                        "rgba(245, 158, 11, 0.6)"
+                        "rgba(0, 242, 254, 0.65)",
+                        "rgba(59, 130, 246, 0.65)",
+                        "rgba(139, 92, 246, 0.65)",
+                        "rgba(239, 68, 68, 0.65)",
+                        "rgba(16, 185, 129, 0.65)",
+                        "rgba(245, 158, 11, 0.65)"
                     ]
                 }]
             },
@@ -124,7 +152,14 @@ const AnalyticsController = {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { position: "right", labels: { color: "#f1f5f9" } }
+                    legend: { position: "right", labels: { color: c.headingColor } },
+                    tooltip: {
+                        backgroundColor: c.tooltipBg,
+                        titleColor: c.headingColor,
+                        bodyColor: c.tooltipText,
+                        borderColor: c.tooltipBorder,
+                        borderWidth: 1
+                    }
                 }
             }
         });

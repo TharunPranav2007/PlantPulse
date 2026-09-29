@@ -28,19 +28,20 @@ class PlantPulseStore {
         }
 
         // Initialize from mock data with initial activity log
+        const now = Date.now();
         const initial = JSON.parse(JSON.stringify(INITIAL_MOCK_DATA));
         initial.activityFeed = [
-            { id: "ACT-1", user: "Rajesh Kumar", role: "Plant Manager", action: "Initialized PlantPulse Command Platform database.", time: "1 hour ago" },
-            { id: "ACT-2", user: "Priya Sharma", role: "Maintenance Supervisor", action: "Assigned Work Order WO-2026-0192 to Arun Kumar.", time: "30 mins ago" },
-            { id: "ACT-3", user: "Vikram Singh", role: "Inventory Manager", action: "Restocked High Pressure Viton Seal Kits (+25 qty).", time: "15 mins ago" }
+            { id: "ACT-1", user: "Rajesh Kumar", role: "Plant Manager", action: "Initialized PlantPulse Command Platform database.", timestamp: now - 3600000, time: "1 hour ago" },
+            { id: "ACT-2", user: "Priya Sharma", role: "Maintenance Supervisor", action: "Assigned Work Order WO-2026-0192 to Arun Kumar.", timestamp: now - 1800000, time: "30 mins ago" },
+            { id: "ACT-3", user: "Vikram Singh", role: "Inventory Manager", action: "Restocked High Pressure Viton Seal Kits (+25 qty).", timestamp: now - 900000, time: "15 mins ago" }
         ];
         initial.stockMovements = [
             { id: "MOV-101", partId: "PART-901", partName: "High Pressure Viton Seal Kit", type: "IN", qty: 25, user: "Vikram Singh", date: "2026-09-28" },
             { id: "MOV-102", partId: "PART-902", partName: "Synthetic Way Lube ISO VG 220", type: "OUT", qty: 2, user: "Arun Kumar", date: "2026-09-27" }
         ];
         initial.notifications = [
-            { id: "NOTIF-1", targetRole: "technician", title: "New Work Order Assigned", message: "WO-2026-0192 assigned to you for Hydraulic Press PRESS-009.", time: "30 mins ago", read: false },
-            { id: "NOTIF-2", targetRole: "inventory", title: "Low Stock Alert", message: "Synthetic Way Lube ISO VG 220 quantity below minimum threshold.", time: "1 hour ago", read: false }
+            { id: "NOTIF-1", targetRole: "technician", title: "New Work Order Assigned", message: "WO-2026-0192 assigned to you for Hydraulic Press PRESS-009.", timestamp: now - 1800000, time: "30 mins ago", read: false },
+            { id: "NOTIF-2", targetRole: "inventory", title: "Low Stock Alert", message: "Synthetic Way Lube ISO VG 220 quantity below minimum threshold.", timestamp: now - 3600000, time: "1 hour ago", read: false }
         ];
 
         this.saveState(initial);
@@ -74,6 +75,21 @@ class PlantPulseStore {
         this.listeners.forEach(cb => cb(eventType, payload));
     }
 
+    /* --- RELATIVE TIME HELPER --- */
+    getRelativeTime(ts, fallbackStr) {
+        if (!ts) return fallbackStr || "Just now";
+        if (typeof ts === "string" && isNaN(Number(ts))) return ts;
+        const diff = Math.floor((Date.now() - Number(ts)) / 1000);
+        if (diff < 15) return "Just now";
+        if (diff < 60) return `${diff} sec ago`;
+        const mins = Math.floor(diff / 60);
+        if (mins < 60) return `${mins} min${mins > 1 ? 's' : ''} ago`;
+        const hours = Math.floor(mins / 60);
+        if (hours < 24) return `${hours} hr${hours > 1 ? 's' : ''} ago`;
+        const days = Math.floor(hours / 24);
+        return `${days} day${days > 1 ? 's' : ''} ago`;
+    }
+
     /* --- ACTIVITY LOG ENGINE --- */
     getActivityFeed() {
         return this.data.activityFeed || [];
@@ -81,16 +97,19 @@ class PlantPulseStore {
 
     addActivity(actionText) {
         const user = (typeof PlantPulseAuth !== "undefined" && PlantPulseAuth.getCurrentUser()) || { name: "System", role: "Automated" };
+        const ts = Date.now();
         const act = {
-            id: "ACT-" + Date.now(),
+            id: "ACT-" + ts,
             user: user.name,
             role: user.role,
             action: actionText,
+            timestamp: ts,
             time: "Just now"
         };
         this.data.activityFeed.unshift(act);
         if (this.data.activityFeed.length > 25) this.data.activityFeed.pop(); // Keep recent 25
         this.saveState();
+        this.notifyListeners("activity_added", act);
         return act;
     }
 

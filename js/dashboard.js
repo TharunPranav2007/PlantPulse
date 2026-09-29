@@ -199,7 +199,7 @@ const DashboardController = {
                     <div class="activity-content">
                         <div><span class="activity-user">${act.user}</span> <span style="font-size:0.75rem; color:var(--text-muted);">(${act.role})</span></div>
                         <div style="font-size:0.8rem; margin-top:2px;">${act.action}</div>
-                        <div class="activity-time">${act.time}</div>
+                        <div class="activity-time" data-timestamp="${act.timestamp || ''}">${store.getRelativeTime(act.timestamp, act.time)}</div>
                     </div>
                 </div>
             `).join("") + `</div>`;
@@ -551,9 +551,17 @@ const DashboardController = {
         if (this.chartInstance) this.chartInstance.destroy();
         const ctx = canvas.getContext("2d");
 
+        const c = typeof PlantPulseTheme !== "undefined" ? PlantPulseTheme.getChartColors() : {
+            gridColor: "rgba(255, 255, 255, 0.08)",
+            textColor: "#94a3b8",
+            accentPrimary: "#00f2fe",
+            tooltipBg: "#161e2e",
+            tooltipText: "#ffffff"
+        };
+
         const gradient = ctx.createLinearGradient(0, 0, 0, 250);
-        gradient.addColorStop(0, "rgba(0, 242, 254, 0.35)");
-        gradient.addColorStop(1, "rgba(0, 242, 254, 0.0)");
+        gradient.addColorStop(0, c.isDark ? "rgba(0, 242, 254, 0.35)" : "rgba(2, 132, 199, 0.3)");
+        gradient.addColorStop(1, c.isDark ? "rgba(0, 242, 254, 0.0)" : "rgba(2, 132, 199, 0.0)");
 
         this.chartInstance = new Chart(ctx, {
             type: "line",
@@ -562,24 +570,44 @@ const DashboardController = {
                 datasets: [{
                     label: "Plant Health Score Index (%)",
                     data: [92, 90, 88, 89, 87, 85, 87],
-                    borderColor: "#00f2fe",
+                    borderColor: c.accentPrimary,
                     borderWidth: 3,
                     backgroundColor: gradient,
                     fill: true,
                     tension: 0.35,
-                    pointBackgroundColor: "#00f2fe",
+                    pointBackgroundColor: c.accentPrimary,
+                    pointHoverRadius: 6,
                     pointRadius: 4
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: c.tooltipBg,
+                        titleColor: c.headingColor,
+                        bodyColor: c.tooltipText,
+                        borderColor: c.tooltipBorder,
+                        borderWidth: 1
+                    }
+                },
                 scales: {
-                    y: { min: 60, max: 100, grid: { color: "rgba(255, 255, 255, 0.05)" }, ticks: { color: "#94a3b8" } },
-                    x: { grid: { display: false }, ticks: { color: "#94a3b8" } }
+                    y: { min: 60, max: 100, grid: { color: c.gridColor }, ticks: { color: c.textColor } },
+                    x: { grid: { display: false }, ticks: { color: c.textColor } }
                 }
             }
         });
+
+        // Listen for live theme changes to update chart instantly
+        if (!this._themeBound) {
+            this._themeBound = true;
+            window.addEventListener("plantpulse_theme_change", () => {
+                if (document.getElementById("healthTrendCanvas")) {
+                    this.renderLineChart();
+                }
+            });
+        }
     }
 };
