@@ -8,6 +8,8 @@
 CREATE DATABASE IF NOT EXISTS `plantpulse_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `plantpulse_db`;
 
+SET FOREIGN_KEY_CHECKS = 0;
+
 -- ----------------------------------------------------------------------------
 -- 1. USERS & ACCESS CONTROL TABLE
 -- ----------------------------------------------------------------------------
@@ -180,7 +182,7 @@ CREATE TABLE `alerts` (
 INSERT INTO `alerts` (`id`, `asset_id`, `severity`, `title`, `description`, `is_read`) VALUES
 ('ALT-301', 'LATHE-007', 'CRITICAL', 'Vibration Threshold Exceeded (7.2 mm/s)', 'Spindle shaft chatter detected on CNC Precision Turning Center LATHE-007.', FALSE),
 ('ALT-302', 'PRESS-009', 'WARNING', 'Hydraulic Oil Temperature High (84°C)', 'Stamping press hydraulic oil reservoir temperature elevated above safe limit.', FALSE),
-('ALT-303', 'PART-902', 'WARNING', 'Low Stock Warning: Synthetic Way Lube', 'Inventory level (4 units) dropped below minimum safety threshold (10 units).', FALSE);
+('ALT-303', NULL, 'WARNING', 'Low Stock Warning: Synthetic Way Lube', 'Inventory level (4 units) dropped below minimum safety threshold (10 units).', FALSE);
 
 
 -- ----------------------------------------------------------------------------
@@ -220,3 +222,5 @@ CREATE TABLE `stock_movements` (
 INSERT INTO `stock_movements` (`part_id`, `part_name`, `type`, `quantity`, `user`, `date`) VALUES
 ('PART-901', 'High Pressure Viton Seal Kit', 'IN', 25, 'Vikram Singh', '2026-09-28'),
 ('PART-902', 'Synthetic Way Lube ISO VG 220', 'OUT', 2, 'Arun Kumar', '2026-09-27');
+
+SET FOREIGN_KEY_CHECKS = 1;
