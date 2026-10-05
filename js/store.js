@@ -200,6 +200,19 @@ class PlantPulseStore {
         this.data.assets.unshift(assetData);
         this.addActivity(`Registered new industrial asset: ${assetData.id} - ${assetData.name}`);
         this.evaluateAlerts();
+
+        if (this.data.isMySQLConnected) {
+            const isPagesSubdir = window.location.pathname.includes("/pages/");
+            const apiPath = isPagesSubdir ? "../api/" : "api/";
+            fetch(apiPath + "assets.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(assetData)
+            }).then(res => res.json()).then(res => {
+                console.log("✓ Asset synced to MySQL database:", res);
+            }).catch(err => console.error("MySQL POST asset error:", err));
+        }
+
         this.notifyListeners("asset_added", assetData);
         return assetData;
     }
@@ -211,6 +224,19 @@ class PlantPulseStore {
             this.data.assets[index].health = this.calculateHealthScore(this.data.assets[index]);
             this.addActivity(`Updated telemetry/status for asset: ${id}`);
             this.evaluateAlerts();
+
+            if (this.data.isMySQLConnected) {
+                const isPagesSubdir = window.location.pathname.includes("/pages/");
+                const apiPath = isPagesSubdir ? "../api/" : "api/";
+                fetch(apiPath + "assets.php", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(this.data.assets[index])
+                }).then(res => res.json()).then(res => {
+                    console.log("✓ Asset update synced to MySQL database:", res);
+                }).catch(err => console.error("MySQL PUT asset error:", err));
+            }
+
             this.notifyListeners("asset_updated", this.data.assets[index]);
             return this.data.assets[index];
         }
@@ -222,6 +248,17 @@ class PlantPulseStore {
         if (index !== -1) {
             const deleted = this.data.assets.splice(index, 1)[0];
             this.addActivity(`Decommissioned asset: ${id} (${deleted.name})`);
+
+            if (this.data.isMySQLConnected) {
+                const isPagesSubdir = window.location.pathname.includes("/pages/");
+                const apiPath = isPagesSubdir ? "../api/" : "api/";
+                fetch(apiPath + "assets.php?id=" + encodeURIComponent(id), {
+                    method: "DELETE"
+                }).then(res => res.json()).then(res => {
+                    console.log("✓ Asset deletion synced to MySQL database:", res);
+                }).catch(err => console.error("MySQL DELETE asset error:", err));
+            }
+
             this.notifyListeners("asset_deleted", deleted);
             return deleted;
         }
@@ -240,6 +277,17 @@ class PlantPulseStore {
         this.data.maintenance.unshift(maintData);
         this.addActivity(`Scheduled ${maintData.type} maintenance for asset ${maintData.assetId}`);
         this.addNotification("technician", "Maintenance Scheduled", `New maintenance event assigned to ${maintData.technician} for ${maintData.assetId}`);
+        
+        if (this.data.isMySQLConnected) {
+            const isPagesSubdir = window.location.pathname.includes("/pages/");
+            const apiPath = isPagesSubdir ? "../api/" : "api/";
+            fetch(apiPath + "maintenance.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(maintData)
+            }).catch(err => console.error("MySQL POST maintenance error:", err));
+        }
+
         this.notifyListeners("maintenance_added", maintData);
         return maintData;
     }
@@ -280,6 +328,19 @@ class PlantPulseStore {
         this.data.workOrders.unshift(woData);
         this.addActivity(`Dispatched Work Order ${woData.id} for asset ${woData.assetId} (${woData.priority} Priority)`);
         this.addNotification("technician", "New Work Order Dispatched", `Work Order ${woData.id} (${woData.issue}) assigned to ${woData.technician}`);
+        
+        if (this.data.isMySQLConnected) {
+            const isPagesSubdir = window.location.pathname.includes("/pages/");
+            const apiPath = isPagesSubdir ? "../api/" : "api/";
+            fetch(apiPath + "workorders.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(woData)
+            }).then(res => res.json()).then(res => {
+                console.log("✓ Work order synced to MySQL database:", res);
+            }).catch(err => console.error("MySQL POST workorder error:", err));
+        }
+
         this.notifyListeners("workorder_added", woData);
         return woData;
     }
@@ -296,6 +357,19 @@ class PlantPulseStore {
 
             this.addActivity(`Work Order ${id} status changed from ${oldStatus} to ${newStatus}.`);
             this.addNotification("supervisor", "Work Order Status Advanced", `Work Order ${id} is now ${newStatus}`);
+
+            if (this.data.isMySQLConnected) {
+                const isPagesSubdir = window.location.pathname.includes("/pages/");
+                const apiPath = isPagesSubdir ? "../api/" : "api/";
+                fetch(apiPath + "workorders.php", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id, status: newStatus, resolution_notes: workNotes })
+                }).then(res => res.json()).then(res => {
+                    console.log("✓ Work order update synced to MySQL database:", res);
+                }).catch(err => console.error("MySQL PUT workorder error:", err));
+            }
+
             this.notifyListeners("workorder_status_changed", wo);
             return wo;
         }
@@ -371,7 +445,24 @@ class PlantPulseStore {
                 this.addNotification("inventory", "Inventory Alert", `${part.name} is now ${status} (Qty: ${part.quantity})`);
             }
 
-            this.evaluateAlerts();
+            if (this.data.isMySQLConnected) {
+                const isPagesSubdir = window.location.pathname.includes("/pages/");
+                const apiPath = isPagesSubdir ? "../api/" : "api/";
+                fetch(apiPath + "spareparts.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        action: "update_stock",
+                        partId: part.id,
+                        changeQty: Math.abs(delta),
+                        type: delta > 0 ? "IN" : "OUT",
+                        user: user.name
+                    })
+                }).then(res => res.json()).then(res => {
+                    console.log("✓ Spare part stock update synced to MySQL database:", res);
+                }).catch(err => console.error("MySQL POST spareparts error:", err));
+            }
+
             this.notifyListeners("sparepart_qty_changed", part);
             return part;
         }

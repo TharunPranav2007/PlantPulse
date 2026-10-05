@@ -40,8 +40,8 @@ try {
             ':vibration' => $input['vibration'] ?? 2.50,
             ':temperature' => $input['temperature'] ?? 65,
             ':hours' => $input['hours'] ?? 0,
-            ':installation_date' => $input['installation_date'],
-            ':last_maintenance' => $input['last_maintenance'],
+            ':installation_date' => $input['installation_date'] ?? $input['installationDate'] ?? date('Y-m-d'),
+            ':last_maintenance' => $input['last_maintenance'] ?? $input['lastMaintenance'] ?? date('Y-m-d'),
             ':description' => $input['description'] ?? ''
         ]);
 
@@ -67,7 +67,7 @@ try {
             ':vibration' => $input['vibration'],
             ':temperature' => $input['temperature'],
             ':hours' => $input['hours'],
-            ':last_maintenance' => $input['last_maintenance'],
+            ':last_maintenance' => $input['last_maintenance'] ?? $input['lastMaintenance'] ?? date('Y-m-d'),
             ':description' => $input['description']
         ]);
 
