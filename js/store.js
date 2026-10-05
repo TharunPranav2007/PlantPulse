@@ -10,6 +10,50 @@ class PlantPulseStore {
     constructor() {
         this.listeners = [];
         this.data = this.loadState();
+        this.syncWithMySQL();
+    }
+
+    async syncWithMySQL() {
+        const isPagesSubdir = window.location.pathname.includes("/pages/");
+        const apiPath = isPagesSubdir ? "../api/" : "api/";
+
+        try {
+            const res = await fetch(apiPath + "assets.php");
+            if (res.ok) {
+                const json = await res.json();
+                if (json.status === "success" && json.data && json.data.length > 0) {
+                    this.data.assets = json.data;
+                    this.data.isMySQLConnected = true;
+
+                    // Sync Work Orders
+                    const woRes = await fetch(apiPath + "workorders.php");
+                    if (woRes.ok) {
+                        const woJson = await woRes.json();
+                        if (woJson.data) this.data.workOrders = woJson.data;
+                    }
+
+                    // Sync Spare Parts
+                    const spRes = await fetch(apiPath + "spareparts.php");
+                    if (spRes.ok) {
+                        const spJson = await spRes.json();
+                        if (spJson.parts) this.data.spareParts = spJson.parts;
+                        if (spJson.movements) this.data.stockMovements = spJson.movements;
+                    }
+
+                    // Sync Alerts
+                    const altRes = await fetch(apiPath + "alerts.php");
+                    if (altRes.ok) {
+                        const altJson = await altRes.json();
+                        if (altJson.data) this.data.alerts = altJson.data;
+                    }
+
+                    this.notifyListeners("mysql_synced");
+                    console.log("✓ PlantPulse Stage 2: Connected to MySQL Database Server (plantpulse_db)");
+                }
+            }
+        } catch (e) {
+            this.data.isMySQLConnected = false;
+        }
     }
 
     loadState() {
