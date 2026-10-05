@@ -8,8 +8,8 @@
 
 ## 🟢 Academic Project Status
 
-- 🟢 **Stage 1 (Current):** Static Web Application enhanced with Client-Side Scripting (HTML5 + CSS3 + ES6 JavaScript + LocalStorage)
-- 🟡 **Stage 2 (Planned):** Dynamic Web Application with PHP 8.x + MySQL Relational Database (PDO Prepared Statements)
+- 🟢 **Stage 1 (Completed):** Static Web Application enhanced with Client-Side Scripting (HTML5 + CSS3 + ES6 JavaScript + LocalStorage)
+- 🟢 **Stage 2 (Completed):** Dynamic Web Application with PHP 8.x + MySQL Server 8.0 Relational Database (PDO REST API Layer)
 - ⚪ **Final Stage:** Project Documentation Report & Viva Examination
 
 ---
@@ -69,13 +69,15 @@ The platform enforces strict **Role-Based Access Control (RBAC)**, allowing diff
 
 ## 5. Technology Stack & Academic Constraints Enforced
 
-| Component | Technology | Usage in Stage 1 |
+| Component | Technology | Usage in Stage 1 & Stage 2 |
 |---|---|---|
 | **Structure** | HTML5 | Semantic structure, accessible forms, modal templates |
 | **Styling** | Vanilla CSS3 | CSS Variables, Flexbox, CSS Grid, Dark/Light themes |
 | **Scripting** | Vanilla JavaScript (ES6+) | Central state store, theme engine, RBAC auth guard, DOM manipulation |
+| **Backend API** | Native PHP 8.x (PDO) | RESTful API Layer handling authentication & CRUD operations |
+| **Database** | MySQL Server 8.0 | `plantpulse_db` relational database (9 tables with constraints) |
 | **Theme Engine** | Centralized `js/theme.js` | Dual-mode (`dark`/`light`), zero-flicker early head script, persistent state |
-| **Data Storage** | LocalStorage / SessionStorage | Client-side state & theme persistence across reloads and navigation |
+| **Data Storage** | MySQL + LocalStorage Fallback | Hybrid persistence (MySQL database API with LocalStorage fallback) |
 | **Charts** | Chart.js (CDN) | Telemetry health trends, downtime, cost breakdowns in dark/light themes |
 | **Iconography**| FontAwesome 6 (CDN) | Industrial command center iconography |
 
@@ -91,22 +93,35 @@ The platform enforces strict **Role-Based Access Control (RBAC)**, allowing diff
 - 🖼️ **Dual-Theme Login Hero Visuals:** Industrial hero graphic optimized with contrast overlays ensuring high visibility in both Light and Dark modes.
 - 🔒 **Interactive Login Experience:** Includes password visibility toggle, quick-fill demo account pills, and dynamic button loading states.
 
+---
+
+## 5.2 Stage 2 MySQL Database & PHP Backend Architecture
+
+- 🗄️ **Relational Database (`plantpulse_db`):** Contains 9 normalized tables (`users`, `assets`, `maintenance`, `work_orders`, `technicians`, `spare_parts`, `alerts`, `activity_log`, `stock_movements`).
+- 🛡️ **PDO Prepared Statements:** Complete protection against SQL Injection vulnerabilities.
+- 🔄 **Real-Time CRUD Synchronization:** Adding, updating, or deleting assets, work orders, or inventory items instantly executes SQL queries in MySQL while re-rendering the frontend without full page reloads.
 
 ---
 
 ## 6. Single Source of Truth & Real-Time Data Flow
 
 ```
-User Action (e.g. Technician Completes Work Order / Inventory Manager Adjusts Stock)
-                           ↓
-              PlantPulse Store (js/store.js)
-                           ↓
-                 Persist to LocalStorage
-                           ↓
-        Recalculate Role KPIs & Evaluate Alerts
-                           ↓
-           Append to Central Activity Feed
-                           ↓
+User Action (e.g. Add Asset / Complete Work Order / Restock Inventory)
+                            │
+                            ▼
+             PlantPulse Store (js/store.js)
+                            │
+         ┌──────────────────┴──────────────────┐
+         ▼                                     ▼
+PHP REST API (api/*.php)               LocalStorage Backup
+         │
+         ▼
+MySQL Database (plantpulse_db)
+                            │
+                            ▼
+          Recalculate Role KPIs & Evaluate Alerts
+                            │
+                            ▼
      Dispatch Event & Re-render Affected UI Views (No Page Reload)
 ```
 
@@ -121,6 +136,21 @@ WT Lab Project/
 ├── login.html                  # Multi-Role Authentication Gateway
 ├── README.md                   # Main Project Documentation
 ├── CHANGELOG.md                # Version Release History
+│
+├── api/                        # PHP 8.x REST API Backend (Stage 2)
+│   ├── db.php                  # Central PDO MySQL Database Connection
+│   ├── login.php               # User Authentication & Verification API
+│   ├── assets.php              # Industrial Assets CRUD API
+│   ├── workorders.php         # Work Orders Lifecycle & Status API
+│   ├── spareparts.php          # Inventory Stock & Movement API
+│   ├── analytics.php           # SQL Analytical Aggregations API
+│   ├── alerts.php              # Telemetry Alerts API
+│   ├── technicians.php         # Technicians Roster API
+│   ├── maintenance.php         # Maintenance Schedules API
+│   └── activity.php            # Real-time Activity Feed API
+│
+├── database/                   # MySQL Relational Database Schema
+│   └── plantpulse_schema.sql   # Database & 9 Relational Tables DDL/DML
 │
 ├── pages/                      # Application Module Pages
 │   ├── assets.html             # Asset Management & Client-Side CRUD
@@ -140,7 +170,7 @@ WT Lab Project/
 ├── js/
 │   ├── mock-data.js            # Initial Dataset (35+ assets, logs, orders)
 │   ├── theme.js                # Centralized Theme System & Toggle Manager
-│   ├── store.js                # Central State Store, LocalStorage API, Predictive Engine
+│   ├── store.js                # Central State Store, MySQL API Bridge, LocalStorage Fallback
 │   ├── auth.js                 # Session Management, RBAC Matrix & Route Guards
 │   ├── app.js                  # Role-Aware Sidebar, Topbar Profile, Toasts, Modals
 │   ├── dashboard.js            # Role-Specific Dashboard Controller
@@ -159,6 +189,7 @@ WT Lab Project/
     ├── testing.md              # Comprehensive Test Case Documentation
     ├── stage-1.md              # Stage 1 Technical Documentation
     ├── stage-2-plan.md         # Stage 2 PHP + MySQL Migration Blueprint
+    ├── stage-2-guide.md        # Stage 2 Setup & Execution Guide
     ├── architecture.md         # System Architecture & Design Tokens
     ├── presentation-outline.md # 16-Slide PowerPoint Presentation Outline
     └── viva-questions.md       # Laboratory Viva Q&A Guide
@@ -166,12 +197,12 @@ WT Lab Project/
 
 ---
 
-## 8. Faculty Review Quick Guide (LWP Review 01)
+## 8. Faculty Review Guide (LWP Review 01 & 02)
 
-1. **Authentication:** Open `login.html`. Click **Rajesh Kumar (Plant Manager)** demo credentials chip, then click **Sign In**.
-2. **Admin Command Center:** Review global KPIs, telemetry overview, machine health trend chart, and real-time activity feed log.
-3. **Role Switching:** Click topbar avatar &rarr; **Sign Out Session**. Log in as **Arun Kumar (Technician)** (`technician` / `tech123`).
-4. **Technician Workspace:** Observe tailored sidebar links. View assigned work order `WO-2026-0192`, click **Start Work**, then **Complete Work** to enter completion notes.
-5. **Supervisor Work Order Assignment:** Log in as **Priya Sharma (Supervisor)** (`supervisor` / `super123`). Reassign an open work order to another technician.
-6. **Inventory Store Manager:** Log in as **Vikram Singh (Inventory Manager)** (`inventory` / `inventory123`). Adjust stock of `Synthetic Way Lube` down to trigger automated `LOW STOCK` alert and view stock movement history.
-7. **Access Control Verification:** Log in as technician and attempt to navigate to `pages/settings.html`. Verify the **403 Access Restricted** guard screen.
+1. **Database Verification:** Open MySQL Workbench 8.0 &rarr; `plantpulse_db` schema to view all 9 relational tables and pre-populated seed data.
+2. **PHP API Execution:** Open `http://localhost/WT%20Lab%20Project/` in XAMPP or PHP web server.
+3. **Authentication:** Open `login.html`. Click **Rajesh Kumar (Plant Manager)** demo credentials chip, then click **Sign In**.
+4. **Live MySQL CRUD Test:** Go to `pages/assets.html`, register a new asset (`CNC-099`). Open MySQL Workbench and run `SELECT * FROM assets;` to verify live row insertion into MySQL database.
+5. **Role Switching:** Click topbar avatar &rarr; **Sign Out Session**. Log in as **Arun Kumar (Technician)** (`technician` / `tech123`).
+6. **Technician Workspace:** Observe tailored sidebar links. View assigned work order `WO-2026-0192`, click **Start Work**, then **Complete Work**.
+7. **Inventory Store Manager:** Log in as **Vikram Singh (Inventory Manager)** (`inventory` / `inventory123`). Adjust stock of `Synthetic Way Lube` down to trigger automated `LOW STOCK` alert and view stock movement history in MySQL.

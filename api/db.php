@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $db_host = "127.0.0.1";
 $db_name = "plantpulse_db";
 $db_user = "root";
-$db_pass = ""; // User can update root password if needed
+$db_pass = "TP@sql26"; // User can update root password if needed
 
 try {
     $pdo = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8mb4", $db_user, $db_pass, [
