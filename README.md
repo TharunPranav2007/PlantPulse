@@ -1,208 +1,319 @@
-# PlantPulse | Smart Industrial Asset & Predictive Maintenance Platform
+# ⚡ PlantPulse | Smart Industrial Asset & Predictive Maintenance Platform
 
-> **Tagline:** Monitor. Maintain. Predict.  
-> **Domain:** Industrial Operations & Smart Manufacturing  
-> **Academic Evaluation:** Web Technologies Laboratory Project (Stage 1 - LWP Review 01)
+<div align="center">
 
----
+![PlantPulse Platform](https://img.shields.io/badge/PlantPulse-v2.0.0-00f2fe?style=for-the-badge&logo=react&logoColor=black)
+![Stage 2 Status](https://img.shields.io/badge/Stage_2-PHP_%2B_MySQL_Complete-10b981?style=for-the-badge&logo=mysql&logoColor=white)
+![Evaluation](https://img.shields.io/badge/Academic_Evaluation-LWP_Review_02-3b82f6?style=for-the-badge&logo=google-chrome&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-f59e0b?style=for-the-badge)
 
-## 🟢 Academic Project Status
+**Monitor. Maintain. Predict.**
 
-- 🟢 **Stage 1 (Completed):** Static Web Application enhanced with Client-Side Scripting (HTML5 + CSS3 + ES6 JavaScript + LocalStorage)
-- 🟢 **Stage 2 (Completed):** Dynamic Web Application with PHP 8.x + MySQL Server 8.0 Relational Database (PDO REST API Layer)
-- ⚪ **Final Stage:** Project Documentation Report & Viva Examination
+*An Enterprise-Grade Smart Manufacturing Operations, Predictive Diagnostic Scoring, and Work Order Execution Platform.*
 
----
-
-## 1. Project Overview
-**PlantPulse** is a modern, enterprise-grade multi-role web application developed for manufacturing organizations to manage industrial machinery, maintenance schedules, work order lifecycles, skilled technicians, spare parts inventory, critical telemetry alerts, and predictive health analytics.
-
-The platform enforces strict **Role-Based Access Control (RBAC)**, allowing different industrial personnel (Plant Manager, Maintenance Technician, Maintenance Supervisor, Stores Inventory Manager) to log in and interact with role-specific dashboards and authorized operational tools.
+[Features](#-key-platform-capabilities) • [System Architecture](#-system-architecture--data-flow) • [Role Matrix](#-role-based-access-control-rbac) • [MySQL Setup](#-stage-2-mysql-database-setup-guide) • [API Docs](#-php-rest-api-documentation) • [Viva Guide](#-faculty-review--viva-checklist)
 
 ---
 
-## 2. Pre-Configured Demo Credentials
+</div>
 
-| Role Title | Name | Username | Password | Employee ID | Department |
-|---|---|---|---|---|---|
-| **Plant Manager** | Rajesh Kumar | `admin` | `admin123` | PM-001 | Plant Operations |
-| **Maintenance Technician** | Arun Kumar | `technician` | `tech123` | TECH-001 | Maintenance |
-| **Maintenance Supervisor** | Priya Sharma | `supervisor` | `super123` | SUP-001 | Maintenance Operations |
-| **Inventory Manager** | Vikram Singh | `inventory` | `inventory123` | INV-001 | Stores & Inventory |
-
-*Note: These demonstration credentials can be clicked directly on the `login.html` screen to quick-fill input fields.*
+> [!NOTE]
+> **Academic Evaluation Status:**
+> - 🟢 **Stage 1 (Completed):** Enterprise UI/UX Static Web Application (HTML5, Vanilla CSS3 Tokens, ES6 JS Engine, Dual Theme System, LocalStorage Persistence)
+> - 🟢 **Stage 2 (Completed):** Dynamic Industrial Platform integrated with **MySQL Server 8.0** & **PHP 8.x PDO REST API Backend**
+> - ⚪ **Final Evaluation:** Project Documentation Report & End-Semester Viva Examination
 
 ---
 
-## 3. Role-Based Access Control (RBAC) Matrix
+## 🌟 Executive Summary
 
-| Module / Action | Plant Manager (Admin) | Supervisor | Technician | Inventory Manager |
-|---|:---:|:---:|:---:|:---:|
-| **Dashboard** | Command Center | Operations | My Workspace | Stores Overview |
-| **Assets Management** | Full CRUD | View | Assigned Only | View Only |
-| **Maintenance Schedules** | Full CRUD | Create / Update | Assigned Only | Relevant Parts |
-| **Work Orders** | Full CRUD | Assign / Create | Update Assigned | No |
-| **Technicians Roster** | Full CRUD | View Workload | Profile Only | No |
-| **Spare Parts Inventory** | Full CRUD | View Only | View Only | Full CRUD / Movements |
-| **Analytics Dashboard** | Full Access | Full Access | No | Inventory Analytics |
-| **Predictive Engine** | Full Access | Full Access | No | No |
-| **Alert Center** | All Alarms | All Alarms | Assigned Alarms | Stock Alarms |
-| **System Settings** | Full Access | No | No | No |
+**PlantPulse** is a full-featured industrial asset performance and predictive maintenance platform engineered for modern manufacturing plants. It solves equipment downtime, unmonitored telemetry spikes, and fragmented technician assignments by centralizing asset health indexes, automated work order lifecycles, spare parts inventory thresholds, and predictive failure scoring.
+
+Built cleanly without heavy external frameworks (strictly complying with academic constraints using native **HTML5, CSS3, ES6 JavaScript, PHP 8.x PDO, and MySQL 8.0**), PlantPulse features a single centralized zero-flicker dual-theme engine (`Dark Slate` and `Clean Industrial Light`) and dynamic real-time synchronization between the browser presentation layer and MySQL database.
 
 ---
 
-## 4. Role-Specific Navigation Guide
+## 🛠️ Technology Stack & Architectural Constraints
 
-### 🛡️ Plant Manager (Admin)
-`Dashboard` • `Assets Management` • `Maintenance` • `Work Orders` • `Technicians` • `Spare Parts` • `Analytics` • `Predictive Health` • `Alert Center` • `My Profile` • `Settings`
-
-### 🔧 Maintenance Technician
-`My Workspace` • `My Work Orders` • `My Maintenance` • `Assigned Assets` • `Alert Center` • `My Profile`
-
-### 📋 Maintenance Supervisor
-`Operations Center` • `Plant Assets` • `Maintenance` • `Work Orders Queue` • `Technicians Roster` • `Analytics` • `Predictive Diagnostics` • `Alert Center` • `My Profile`
-
-### 📦 Inventory Manager
-`Stores Workspace` • `Spare Parts Catalog` • `View Plant Assets` • `Stock Alerts` • `My Profile`
-
----
-
-## 5. Technology Stack & Academic Constraints Enforced
-
-| Component | Technology | Usage in Stage 1 & Stage 2 |
+| Component Layer | Technology | Engineering Implementation Details |
 |---|---|---|
-| **Structure** | HTML5 | Semantic structure, accessible forms, modal templates |
-| **Styling** | Vanilla CSS3 | CSS Variables, Flexbox, CSS Grid, Dark/Light themes |
-| **Scripting** | Vanilla JavaScript (ES6+) | Central state store, theme engine, RBAC auth guard, DOM manipulation |
-| **Backend API** | Native PHP 8.x (PDO) | RESTful API Layer handling authentication & CRUD operations |
-| **Database** | MySQL Server 8.0 | `plantpulse_db` relational database (9 tables with constraints) |
-| **Theme Engine** | Centralized `js/theme.js` | Dual-mode (`dark`/`light`), zero-flicker early head script, persistent state |
-| **Data Storage** | MySQL + LocalStorage Fallback | Hybrid persistence (MySQL database API with LocalStorage fallback) |
-| **Charts** | Chart.js (CDN) | Telemetry health trends, downtime, cost breakdowns in dark/light themes |
-| **Iconography**| FontAwesome 6 (CDN) | Industrial command center iconography |
+| **Frontend Structure** | **HTML5** | Accessible semantic elements, modal templates, dynamic tables, ARIA support |
+| **Styling & Design System** | **Vanilla CSS3** | Dual-theme CSS Variables (`:root` / `[data-theme="light"]`), Flexbox, CSS Grid, Glassmorphism |
+| **Client Scripting** | **JavaScript (ES6+)** | Central State Store (`js/store.js`), RBAC Auth Engine (`js/auth.js`), Live Ticker |
+| **Theme Engine** | **`js/theme.js`** | Zero-flicker early head initialization, `localStorage` preference, live Chart.js theme adapter |
+| **Backend REST API** | **PHP 8.x (PDO)** | Object-Oriented PDO database connection layer with prepared statements |
+| **Relational Database** | **MySQL Server 8.0** | `plantpulse_db` schema with 9 normalized tables, FK constraints, and cascades |
+| **Visualizations** | **Chart.js 4.x (CDN)** | Theme-adaptive line graphs, downtime bar charts, cost doughnut charts, polar distributions |
+| **Iconography** | **FontAwesome 6 (CDN)**| Precision industrial iconography system |
 
-*Note: As required by academic constraints, React, Angular, Vue, Node.js, Express, MongoDB, Firebase, and PostgreSQL are NOT used in this implementation.*
-
----
-
-## 5.1 Centralized Theme Engine & Accessibility Enhancements
-
-- ☀️ **Light Mode & 🌙 Dark Mode Support:** Full dual-theme system driven by CSS design variables in `css/style.css`.
-- ⚡ **Zero-Flicker Cross-Page Navigation:** Synchronous inline `<head>` initialization script reads stored theme from `localStorage` (`plantpulse_theme`) BEFORE CSS parsing and DOM rendering, preventing Flash of Unstyled Content (FOUC) or dark mode flash.
-- 👁️ **WCAG 2.1 AAA Sidebar Contrast:** Sidebar category headings (`CORE OPERATIONS`, `RESOURCES & INVENTORY`, `INTELLIGENCE`, `SYSTEM`) styled with high-contrast slate design tokens (`--text-section-heading`), semi-bold typography, and uppercase letter-spacing.
-- 🖼️ **Dual-Theme Login Hero Visuals:** Industrial hero graphic optimized with contrast overlays ensuring high visibility in both Light and Dark modes.
-- 🔒 **Interactive Login Experience:** Includes password visibility toggle, quick-fill demo account pills, and dynamic button loading states.
+> [!IMPORTANT]
+> **Academic Integrity Constraint Compliance:**  
+> In strict accordance with Web Technologies Laboratory evaluation rules, **React, Angular, Vue, Node.js, Express, MongoDB, Firebase, and PostgreSQL are NOT used**. All dynamic features are achieved using native web standards.
 
 ---
 
-## 5.2 Stage 2 MySQL Database & PHP Backend Architecture
+## 🔑 Pre-Configured Demo Accounts (Multi-Role Gateway)
 
-- 🗄️ **Relational Database (`plantpulse_db`):** Contains 9 normalized tables (`users`, `assets`, `maintenance`, `work_orders`, `technicians`, `spare_parts`, `alerts`, `activity_log`, `stock_movements`).
-- 🛡️ **PDO Prepared Statements:** Complete protection against SQL Injection vulnerabilities.
-- 🔄 **Real-Time CRUD Synchronization:** Adding, updating, or deleting assets, work orders, or inventory items instantly executes SQL queries in MySQL while re-rendering the frontend without full page reloads.
+The login portal ([`login.html`](file:///c:/Users/work/Downloads/WT%20Lab%20Project/login.html)) provides quick-fill role selection pills for seamless faculty evaluation:
+
+| Role Title | Personnel Name | Username | Password | Employee ID | Department Workspace |
+|---|---|---|---|---|---|
+| 🛡️ **Plant Manager (Admin)** | Rajesh Kumar | `admin` | `admin123` | `PM-001` | Plant Operations Command Center |
+| 🔧 **Maintenance Technician** | Arun Kumar | `technician` | `tech123` | `TECH-001` | Technician Operations Queue |
+| 📋 **Maintenance Supervisor** | Priya Sharma | `supervisor` | `super123` | `SUP-001` | Maintenance & Workload Roster |
+| 📦 **Stores Inventory Manager**| Vikram Singh | `inventory` | `inventory123` | `INV-001` | Spare Parts & Stock Movements |
 
 ---
 
-## 6. Single Source of Truth & Real-Time Data Flow
+## ⚡ Key Platform Capabilities
+
+### 1. 🛡️ Role-Based Access Control (RBAC) & Dynamic Navigation
+- **Granular Security Matrix:** RESTRICTS unauthorized direct URL access (e.g., technician attempting to access system settings triggers a **403 Access Restricted** guard screen).
+- **Tailored Workspaces:** Dynamically filters sidebar navigation options based on the authenticated user's permission level.
+
+### 2. ☀️ Zero-Flicker Dual-Theme Architecture
+- **Central Source of Truth:** Managed by [`js/theme.js`](file:///c:/Users/work/Downloads/WT%20Lab%20Project/js/theme.js).
+- **Early Synchronous Head Script:** Prevents Flash of Unstyled Content (FOUC) or dark mode flash during cross-page navigation or hard refreshes in Light Mode.
+- **WCAG 2.1 AAA Contrast:** High-contrast slate design tokens (`--text-section-heading`) for sidebar category headers (`CORE OPERATIONS`, `RESOURCES & INVENTORY`, `INTELLIGENCE`, `SYSTEM`).
+- **Collapsed Sidebar Tooltip Flyouts:** Hovering over icons in collapsed sidebar mode displays crisp floating flyout labels.
+
+### 3. 📈 Interactive & Theme-Adaptive Visualizations
+- All Chart.js charts dynamically update grid lines, text labels, tooltips, and background gradients when switching between Light Mode and Dark Mode.
+- Real-Time 10-second ticker updates relative activity feed timestamps (`Just now`, `15 sec ago`, `2 mins ago`).
+
+### 4. 🔄 Dynamic MySQL CRUD & Auto Fallback Bridge
+- Executing actions (registering an asset, dispatching a work order, updating stock) sends real-time `POST`/`PUT`/`DELETE` HTTP requests to PHP REST endpoints, executing SQL queries in MySQL database `plantpulse_db`.
+- **Resilient Fallback:** If offline or running without a server, the application automatically uses LocalStorage backup without breaking.
+
+---
+
+## 📐 System Architecture & Data Flow
 
 ```
-User Action (e.g. Add Asset / Complete Work Order / Restock Inventory)
-                            │
-                            ▼
-             PlantPulse Store (js/store.js)
-                            │
-         ┌──────────────────┴──────────────────┐
-         ▼                                     ▼
-PHP REST API (api/*.php)               LocalStorage Backup
-         │
-         ▼
-MySQL Database (plantpulse_db)
-                            │
-                            ▼
-          Recalculate Role KPIs & Evaluate Alerts
-                            │
-                            ▼
-     Dispatch Event & Re-render Affected UI Views (No Page Reload)
+                      +------------------------------------------+
+                      |       BROWSER PRESENTATION LAYER         |
+                      |   HTML5 | CSS Design Tokens | ES6 Engine |
+                      +------------------------------------------+
+                                           │
+                       ┌───────────────────┴───────────────────┐
+                       │                                       │
+                       ▼                                       ▼
+            +--------------------+                   +--------------------+
+            | CENTRAL STATE STORE|                   | EARLY THEME ENGINE |
+            |    (js/store.js)   |                   |   (js/theme.js)    |
+            +--------------------+                   +--------------------+
+                       │                                       │
+            fetch() REST API Calls                     data-theme="light/dark"
+                       │                                       │
+                       ▼                                       ▼
+            +--------------------+                   +--------------------+
+            | PHP 8.x PDO LAYER  |                   | DYNAMIC CSS VARS   |
+            |     (api/*.php)    |                   |   (& CHART.JS)     |
+            +--------------------+                   +--------------------+
+                       │
+            PDO Prepared Statements
+                       │
+                       ▼
+            +--------------------+
+            | MYSQL DATABASE 8.0 |
+            |  (plantpulse_db)   |
+            +--------------------+
 ```
 
 ---
 
-## 7. Project Directory Structure
+## 🗄️ Relational MySQL Database Schema (`plantpulse_db`)
+
+The relational database contains **9 normalized tables** linked with Primary & Foreign Key constraints:
+
+```
++------------------+         +--------------------+         +-----------------------+
+|      users       |         |       assets       |         |      maintenance      |
++------------------+         +--------------------+         +-----------------------+
+| id (PK)          |         | id (PK)            |<--------| id (PK)               |
+| username (UQ)    |         | name               |         | asset_id (FK)         |
+| password_hash    |         | type               |         | type                  |
+| role             |         | status             |         | technician            |
+| role_key         |         | health             |         | priority              |
+| employee_id (UQ) |         | vibration          |         | cost                  |
+| department       |         | temperature        |         | status                |
++------------------+         +--------------------+         +-----------------------+
+                                       │
+                                       ├────────────────────┐
+                                       ▼                    ▼
+                             +--------------------+ +-----------------------+
+                             |    work_orders     | |        alerts         |
+                             +--------------------+ +-----------------------+
+                             | id (PK)            | | id (PK)               |
+                             | asset_id (FK)      | | asset_id (FK NULL)    |
+                             | issue              | | severity              |
+                             | priority           | | title                 |
+                             | technician         | | description           |
+                             | status             | | is_read               |
+                             +--------------------+ +-----------------------+
+                                                               
++------------------+         +--------------------+         +-----------------------+
+|   technicians    |         |    spare_parts     |         |    stock_movements    |
++------------------+         +--------------------+         +-----------------------+
+| id (PK)          |         | id (PK)            |<--------| id (PK)               |
+| name             |         | name               |         | part_id (FK)          |
+| specialization   |         | category           |         | type (IN/OUT)         |
+| availability     |         | quantity           |         | quantity              |
+| active_orders    |         | min_stock          |         | user                  |
+| completed_orders |         | unit_cost          |         | date                  |
++------------------+         +--------------------+         +-----------------------+
+```
+
+---
+
+## 🚀 Stage 2 MySQL Database Setup Guide
+
+> [!TIP]
+> **Prerequisites:** MySQL Server 8.0 & MySQL Workbench installed on your system.
+
+### Step 1: Execute SQL Schema Script
+1. Open **MySQL Workbench 8.0**.
+2. Connect to your MySQL Server instance (`localhost:3306` with user `root`).
+3. Open [`database/plantpulse_schema.sql`](file:///c:/Users/work/Downloads/WT%20Lab%20Project/database/plantpulse_schema.sql).
+4. Click the **Lightning Bolt (Execute)** button.  
+   *(This creates `plantpulse_db` and populates all 9 tables with initial seed data).*
+
+#### Command Line Option (PowerShell):
+```powershell
+Get-Content "c:\Users\work\Downloads\WT Lab Project\database\plantpulse_schema.sql" | & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
+```
+
+### Step 2: Configure Database Credentials in `api/db.php`
+Open [`api/db.php`](file:///c:/Users/work/Downloads/WT%20Lab%20Project/api/db.php) and verify your MySQL password on line 20:
+```php
+$db_host = "127.0.0.1";
+$db_name = "plantpulse_db";
+$db_user = "root";
+$db_pass = "YOUR_MYSQL_PASSWORD"; // Set your password
+```
+
+### Step 3: Run via XAMPP or Built-in PHP Server
+
+#### Option A: Using XAMPP
+1. Copy the project folder to `C:\xampp\htdocs\WT Lab Project`.
+2. Start **Apache** in XAMPP Control Panel.
+3. Open browser: `http://localhost/WT%20Lab%20Project/`
+
+#### Option B: Built-in PHP CLI Server
+```powershell
+php -S localhost:8000
+```
+Then open: `http://localhost:8000/`
+
+---
+
+## 📡 PHP REST API Documentation
+
+| Endpoint | Method | Input Parameters | Output Response | Functionality |
+|---|:---:|---|---|---|
+| `/api/login.php` | `POST` | `username`, `password` | User JSON Profile | Authenticates user against `users` table |
+| `/api/assets.php` | `GET` | `?id=CNC-001` (Optional) | Asset Object / Array | Reads assets from `assets` table |
+| `/api/assets.php` | `POST` | Asset JSON Object | `{status: "success"}` | Inserts new machinery asset into MySQL |
+| `/api/assets.php` | `PUT` | Updated Asset JSON | `{status: "success"}` | Updates asset telemetry & status |
+| `/api/assets.php` | `DELETE`| `?id=CNC-001` | `{status: "success"}` | Deletes machine asset from MySQL |
+| `/api/workorders.php` | `GET` | None | Work Orders Array | Reads work order queue |
+| `/api/workorders.php` | `POST` | Work Order JSON | `{status: "success"}` | Dispatches new work order |
+| `/api/workorders.php` | `PUT` | `{id, status, notes}` | `{status: "success"}` | Advances work order lifecycle state |
+| `/api/spareparts.php` | `GET` | None | Parts & Movements | Fetches inventory stock & logs |
+| `/api/spareparts.php` | `POST` | `{action, partId, qty}` | `{status: "success"}` | Adjusts stock & triggers low-stock alert |
+| `/api/analytics.php` | `GET` | None | KPI Aggregations | Runs SQL `SUM`, `COUNT`, `AVG` queries |
+
+---
+
+## 📂 Project Directory Structure
 
 ```
 WT Lab Project/
-│
-├── index.html                  # Main Role-Aware Dashboard Gateway
-├── login.html                  # Multi-Role Authentication Gateway
-├── README.md                   # Main Project Documentation
-├── CHANGELOG.md                # Version Release History
+├── index.html                  # Main Role-Aware Command Dashboard Gateway
+├── login.html                  # Multi-Role Portal with Quick-Fill Credentials
+├── README.md                   # Complete Platform Documentation
+├── CHANGELOG.md                # Version & Release History
 │
 ├── api/                        # PHP 8.x REST API Backend (Stage 2)
-│   ├── db.php                  # Central PDO MySQL Database Connection
-│   ├── login.php               # User Authentication & Verification API
-│   ├── assets.php              # Industrial Assets CRUD API
-│   ├── workorders.php         # Work Orders Lifecycle & Status API
-│   ├── spareparts.php          # Inventory Stock & Movement API
-│   ├── analytics.php           # SQL Analytical Aggregations API
-│   ├── alerts.php              # Telemetry Alerts API
-│   ├── technicians.php         # Technicians Roster API
-│   ├── maintenance.php         # Maintenance Schedules API
-│   └── activity.php            # Real-time Activity Feed API
+│   ├── db.php                  # PDO Connection & Error Handler
+│   ├── login.php               # Authentication API Endpoint
+│   ├── assets.php              # Asset CRUD API Endpoint
+│   ├── workorders.php         # Work Orders Management API Endpoint
+│   ├── spareparts.php          # Inventory Stock API Endpoint
+│   ├── analytics.php           # SQL Analytical Aggregations API Endpoint
+│   ├── alerts.php              # Telemetry Alerts API Endpoint
+│   ├── technicians.php         # Technicians Directory API Endpoint
+│   ├── maintenance.php         # Maintenance Schedules API Endpoint
+│   └── activity.php            # Real-time Activity Feed API Endpoint
 │
-├── database/                   # MySQL Relational Database Schema
-│   └── plantpulse_schema.sql   # Database & 9 Relational Tables DDL/DML
+├── database/                   # MySQL Schema & Seed Script
+│   └── plantpulse_schema.sql   # Relational Database DDL/DML Script (9 Tables)
 │
-├── pages/                      # Application Module Pages
-│   ├── assets.html             # Asset Management & Client-Side CRUD
-│   ├── maintenance.html        # Maintenance Schedules & Tracking
-│   ├── workorders.html         # Work Orders Kanban Board & Table View
-│   ├── technicians.html        # Technician Directory & Workload
-│   ├── spareparts.html         # Spare Parts & Auto Stock Calculator
-│   ├── analytics.html          # Interactive Analytics & Chart.js
-│   ├── predictive.html         # Simulated Predictive Diagnostic Engine
-│   ├── alerts.html             # Critical Alert Center
+├── pages/                      # Application Module Views
+│   ├── assets.html             # Asset Directory & Validation Modals
+│   ├── maintenance.html        # Maintenance Schedules & Calendar
+│   ├── workorders.html         # Kanban Board & Table View
+│   ├── technicians.html        # Technicians Roster & Workload
+│   ├── spareparts.html         # Spare Parts Catalog & Calculator
+│   ├── analytics.html          # Interactive Analytical Dashboard
+│   ├── predictive.html         # Predictive Health Scoring Engine
+│   ├── alerts.html             # Critical Telemetry Alert Center
 │   ├── profile.html            # User Personnel Profile
 │   └── settings.html           # System Settings & Data Reset
 │
 ├── css/
-│   └── style.css               # Design System, Tokens, Components, Themes
+│   └── style.css               # Design System, CSS Variables, Component Tokens
 │
 ├── js/
-│   ├── mock-data.js            # Initial Dataset (35+ assets, logs, orders)
-│   ├── theme.js                # Centralized Theme System & Toggle Manager
-│   ├── store.js                # Central State Store, MySQL API Bridge, LocalStorage Fallback
-│   ├── auth.js                 # Session Management, RBAC Matrix & Route Guards
-│   ├── app.js                  # Role-Aware Sidebar, Topbar Profile, Toasts, Modals
-│   ├── dashboard.js            # Role-Specific Dashboard Controller
-│   ├── assets.js               # Assets Controller & Validation Form Modals
+│   ├── theme.js                # Centralized Theme Engine & Chart Adapter
+│   ├── store.js                # Data Store, MySQL API Bridge, Fallback Engine
+│   ├── auth.js                 # Session Guard & RBAC Permission Matrix
+│   ├── app.js                  # Sidebar Controller, Toasts, Modals, Time Ticker
+│   ├── dashboard.js            # Dashboard Controller & Live Line Chart
+│   ├── assets.js               # Assets Controller & Validation Logic
 │   ├── maintenance.js          # Maintenance Schedules Controller
-│   ├── workorders.js           # Work Orders Kanban/Table View Controller
+│   ├── workorders.js           # Kanban & Table View Controller
 │   ├── technicians.js          # Technicians Roster Controller
-│   ├── spareparts.js           # Inventory & Auto Stock Status Logic
-│   ├── analytics.js            # Analytical Charts & Live Filters
-│   ├── predictive.js           # Predictive Diagnostic Scoring & Formula Modal
+│   ├── spareparts.js           # Stock Status & Restock Logic
+│   ├── analytics.js            # Analytical Charts & Filter Engines
+│   ├── predictive.js           # Diagnostic Formula Modal & Scoring
 │   ├── alerts.js               # Alert Center Controller
-│   └── settings.js             # Preferences & Data Reset Logic
+│   └── settings.js             # Preferences Controller
 │
 └── docs/                       # Academic Evaluation Support Documentation
-    ├── user-roles.md           # Multi-Role Specifications & Permission Matrix
-    ├── testing.md              # Comprehensive Test Case Documentation
-    ├── stage-1.md              # Stage 1 Technical Documentation
-    ├── stage-2-plan.md         # Stage 2 PHP + MySQL Migration Blueprint
+    ├── stage-1.md              # Stage 1 Technical Report
     ├── stage-2-guide.md        # Stage 2 Setup & Execution Guide
-    ├── architecture.md         # System Architecture & Design Tokens
-    ├── presentation-outline.md # 16-Slide PowerPoint Presentation Outline
-    └── viva-questions.md       # Laboratory Viva Q&A Guide
+    ├── stage-2-plan.md         # Stage 2 Migration Architecture Blueprint
+    ├── architecture.md         # Design System Tokens & Architecture
+    ├── user-roles.md           # Multi-Role RBAC Specification
+    ├── testing.md              # Comprehensive Test Suite (AUTH, SYNC, THEME)
+    ├── presentation-outline.md # 16-Slide PowerPoint Outline
+    └── viva-questions.md       # Laboratory Viva Examination Guide
 ```
 
 ---
 
-## 8. Faculty Review Guide (LWP Review 01 & 02)
+## 🎓 Faculty Review & Viva Checklist
 
-1. **Database Verification:** Open MySQL Workbench 8.0 &rarr; `plantpulse_db` schema to view all 9 relational tables and pre-populated seed data.
-2. **PHP API Execution:** Open `http://localhost/WT%20Lab%20Project/` in XAMPP or PHP web server.
-3. **Authentication:** Open `login.html`. Click **Rajesh Kumar (Plant Manager)** demo credentials chip, then click **Sign In**.
-4. **Live MySQL CRUD Test:** Go to `pages/assets.html`, register a new asset (`CNC-099`). Open MySQL Workbench and run `SELECT * FROM assets;` to verify live row insertion into MySQL database.
-5. **Role Switching:** Click topbar avatar &rarr; **Sign Out Session**. Log in as **Arun Kumar (Technician)** (`technician` / `tech123`).
-6. **Technician Workspace:** Observe tailored sidebar links. View assigned work order `WO-2026-0192`, click **Start Work**, then **Complete Work**.
-7. **Inventory Store Manager:** Log in as **Vikram Singh (Inventory Manager)** (`inventory` / `inventory123`). Adjust stock of `Synthetic Way Lube` down to trigger automated `LOW STOCK` alert and view stock movement history in MySQL.
+### LWP Review 01 Verification (Stage 1)
+- [x] Static HTML5/CSS3/JavaScript web platform implementation.
+- [x] Zero-flicker dual-theme switcher (`Light` and `Dark` modes).
+- [x] Client-side form validation and modal dialogs.
+- [x] Role-Based Access Control (`admin`, `technician`, `supervisor`, `inventory`).
+- [x] Responsive layout across Desktop (1920px), Laptop (1366px), Tablet (768px), and Mobile (375px).
+
+### LWP Review 02 Verification (Stage 2)
+- [x] MySQL Server 8.0 relational database integration (`plantpulse_db`).
+- [x] PHP 8.x PDO REST API backend handling `GET`, `POST`, `PUT`, `DELETE` operations.
+- [x] Real-time CRUD synchronization (creating asset in browser updates MySQL table).
+- [x] SQL aggregation queries (`SUM`, `COUNT`, `AVG`, `GROUP BY`) calculating analytics.
+- [x] PDO prepared statements securing all endpoints against SQL Injection.
+
+---
+
+<div align="center">
+
+**PlantPulse Smart Industrial Platform** • Developed for Web Technologies Laboratory Evaluation  
+*Designed with Precision. Built for Performance.*
+
+</div>
